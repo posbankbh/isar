@@ -71,6 +71,9 @@ class ObjectProperty {
     required this.deserialize,
     required this.assignable,
     this.constructorPosition,
+    this.isMap = false,
+    this.mapKeyType,
+    this.mapValueType,
   });
 
   final String dartName;
@@ -91,6 +94,9 @@ class ObjectProperty {
   final PropertyDeser deserialize;
   final bool assignable;
   final int? constructorPosition;
+  final bool isMap;
+  final String? mapKeyType;
+  final String? mapValueType;
 
   bool get isEnum => enumMap != null;
 

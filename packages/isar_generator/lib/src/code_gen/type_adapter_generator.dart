@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dartx/dartx.dart';
 import 'package:isar/isar.dart';
 import 'package:isar_generator/src/object_info.dart';
@@ -191,7 +193,12 @@ String generateSerialize(ObjectInfo object) {
         code += 'writer.writeDateTime(offsets[$i], $value);';
         break;
       case IsarType.string:
-        code += 'writer.writeString(offsets[$i], $value);';
+        if (property.isMap) {
+          // ignore: lines_longer_than_80_chars
+          code += 'writer.writeString(offsets[$i], $value == null ? null : jsonEncode($value));';
+        } else {
+          code += 'writer.writeString(offsets[$i], $value);';
+        }
         break;
       case IsarType.object:
         code += '''
@@ -251,11 +258,9 @@ String generateDeserialize(ObjectInfo object) {
     ) {
       final object = ${object.dartName}(''';
 
-  final propertiesByMode =
-      object.properties.groupBy((ObjectProperty p) => p.deserialize);
+  final propertiesByMode = object.properties.groupBy((ObjectProperty p) => p.deserialize);
   final positional = propertiesByMode[PropertyDeser.positionalParam] ?? [];
-  final sortedPositional =
-      positional.sortedBy((ObjectProperty p) => p.constructorPosition!);
+  final sortedPositional = positional.sortedBy((ObjectProperty p) => p.constructorPosition!);
   for (final p in sortedPositional) {
     final index = object.objectProperties.indexOf(p);
     final deser = _deserializeProperty(object, p, 'offsets[$index]');
@@ -336,8 +341,7 @@ String _deserializeProperty(
 
   if (property.isEnum) {
     if (property.isarType.isList) {
-      final elDefault =
-          !property.elementNullable ? '?? ${property.defaultEnumElement}' : '';
+      final elDefault = !property.elementNullable ? '?? ${property.defaultEnumElement}' : '';
       return '$deser?.map((e) => ${property.valueEnumMapName(object)}[e] '
           '$elDefault).toList() $defaultValue';
     } else {
@@ -349,10 +353,7 @@ String _deserializeProperty(
 }
 
 String _deserialize(ObjectProperty property, String propertyOffset) {
-  final orNull =
-      property.nullable || property.userDefaultValue != null || property.isEnum
-          ? 'OrNull'
-          : '';
+  final orNull = property.nullable || property.userDefaultValue != null || property.isEnum ? 'OrNull' : '';
   final orElNull = property.elementNullable ? 'OrNull' : '';
 
   switch (property.isarType) {
@@ -371,7 +372,11 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
     case IsarType.dateTime:
       return 'reader.readDateTime$orNull($propertyOffset)';
     case IsarType.string:
-      return 'reader.readString$orNull($propertyOffset)';
+      if (property.isMap) {
+        return 'decodeMap<${property.mapKeyType}, ${property.mapValueType}>(reader.readString$orNull($propertyOffset))';
+      } else {
+        return 'reader.readString$orNull($propertyOffset)';
+      }
     case IsarType.object:
       return '''
         reader.readObjectOrNull<${property.typeClassName}>(
@@ -471,6 +476,16 @@ String generateEnumMaps(ObjectInfo object) {
       code += '};';
     }
   }
+
+  return code;
+}
+
+String generateMapDecoderHelper(ObjectInfo object) {
+  var code = 'Map<TKey, TValue>? decodeMap<TKey, TValue>(String? data)';
+  code += '{';
+  code += '   if (data == null) return null;';
+  code += '      return (jsonDecode(data) as Map?)?.cast<TKey, TValue>();';
+  code += '}';
 
   return code;
 }

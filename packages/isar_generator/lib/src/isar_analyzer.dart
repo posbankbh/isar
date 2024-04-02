@@ -87,11 +87,10 @@ class IsarAnalyzer {
       err('Embedded objects must not have indexes.', modelClass);
     }
 
-//TODO: ddddd
-    // final hasIdProperty = properties.any((it) => it.isId);
-    // if (hasIdProperty) {
-    //   err('Embedded objects must not define an id.', modelClass);
-    // }
+    final hasIdProperty = properties.any((it) => it.isId);
+    if (hasIdProperty) {
+      err('Embedded objects must not define an id.', modelClass);
+    }
 
     return ObjectInfo(
       dartName: modelClass.displayName,
@@ -315,6 +314,14 @@ class IsarAnalyzer {
           property.setter == null ? PropertyDeser.none : PropertyDeser.assign;
     }
 
+            String? mapKeyType;
+        String? mapValueType;
+        if (dartType.isDartCoreMap) {
+          final mapElement = dartType as ParameterizedType;
+          mapKeyType = mapElement.typeArguments[0].getDisplayString(withNullability: true);
+          mapValueType = mapElement.typeArguments[1].getDisplayString(withNullability: true);
+        }
+
     return ObjectProperty(
       dartName: property.displayName,
       isarName: property.isarName,
@@ -333,6 +340,9 @@ class IsarAnalyzer {
       deserialize: deserialize,
       assignable: property.setter != null,
       constructorPosition: constructorPosition,
+      isMap: dartType.isDartCoreMap,
+      mapKeyType: mapKeyType,
+      mapValueType: mapValueType,
     );
   }
 
