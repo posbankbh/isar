@@ -87,10 +87,11 @@ class IsarAnalyzer {
       err('Embedded objects must not have indexes.', modelClass);
     }
 
-    final hasIdProperty = properties.any((it) => it.isId);
-    if (hasIdProperty) {
-      err('Embedded objects must not define an id.', modelClass);
-    }
+//TODO: ddddd
+    // final hasIdProperty = properties.any((it) => it.isId);
+    // if (hasIdProperty) {
+    //   err('Embedded objects must not define an id.', modelClass);
+    // }
 
     return ObjectInfo(
       dartName: modelClass.displayName,
@@ -297,6 +298,7 @@ class IsarAnalyzer {
     int? constructorPosition;
     late PropertyDeser deserialize;
     if (constructorParameter != null) {
+      //TODO:33333333
       // if (constructorParameter.type != property.type) {
       //   err(
       //     'Constructor parameter type does not match property type',
