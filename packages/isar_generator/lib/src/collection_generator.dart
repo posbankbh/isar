@@ -98,6 +98,8 @@ class IsarEmbeddedGenerator extends GeneratorForAnnotation<Embedded> {
       ${generateSerialize(object)}
       ${generateDeserialize(object)}
       ${generateDeserializeProp(object)}
+      ${generateMapDecoderHelper(object)}
+
 
       ${generateEnumMaps(object)}
 
