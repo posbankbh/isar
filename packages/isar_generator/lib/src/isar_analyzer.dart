@@ -297,12 +297,12 @@ class IsarAnalyzer {
     int? constructorPosition;
     late PropertyDeser deserialize;
     if (constructorParameter != null) {
-      if (constructorParameter.type != property.type) {
-        err(
-          'Constructor parameter type does not match property type',
-          constructorParameter,
-        );
-      }
+      // if (constructorParameter.type != property.type) {
+      //   err(
+      //     'Constructor parameter type does not match property type',
+      //     constructorParameter,
+      //   );
+      // }
       deserialize = constructorParameter.isNamed
           ? PropertyDeser.namedParam
           : PropertyDeser.positionalParam;
