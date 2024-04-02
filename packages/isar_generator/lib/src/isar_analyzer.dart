@@ -80,16 +80,17 @@ class IsarAnalyzer {
     }
     _checkValidPropertiesConstructor(properties, constructor);
 
-    final hasIndex = modelClass.allAccessors.any(
-      (it) => it.indexAnnotations.isNotEmpty,
-    );
-    if (hasIndex) {
-      err('Embedded objects must not have indexes.', modelClass);
-    }
+    // final hasIndex = modelClass.allAccessors.any(
+    //   (it) => it.indexAnnotations.isNotEmpty,
+    // );
+    // if (hasIndex) {
+    //   err('Embedded objects must not have indexes.', modelClass);
+    // }
 
     final hasIdProperty = properties.any((it) => it.isId);
     if (hasIdProperty) {
-      err('Embedded objects must not define an id.', modelClass);
+      //err('Embedded objects must not define an id.', modelClass);
+      properties.remove(properties.firstWhere((it) => it.isId));
     }
 
     return ObjectInfo(
@@ -100,9 +101,7 @@ class IsarAnalyzer {
   }
 
   ConstructorElement _checkValidClass(Element modelClass) {
-    if (modelClass is! ClassElement ||
-        modelClass is EnumElement ||
-        modelClass is MixinElement) {
+    if (modelClass is! ClassElement || modelClass is EnumElement || modelClass is MixinElement) {
       err(
         'Only classes may be annotated with @Collection or @Embedded.',
         modelClass,
@@ -117,15 +116,13 @@ class IsarAnalyzer {
       err('Class must be public.', modelClass);
     }
 
-    final constructor = modelClass.constructors
-        .firstOrNullWhere((ConstructorElement c) => c.periodOffset == null);
+    final constructor = modelClass.constructors.firstOrNullWhere((ConstructorElement c) => c.periodOffset == null);
     if (constructor == null) {
       err('Class needs an unnamed constructor.', modelClass);
     }
 
     final hasCollectionSupertype = modelClass.allSupertypes.any((type) {
-      return type.element.collectionAnnotation != null ||
-          type.element.embeddedAnnotation != null;
+      return type.element.collectionAnnotation != null || type.element.embeddedAnnotation != null;
     });
     if (hasCollectionSupertype) {
       err(
@@ -142,8 +139,7 @@ class IsarAnalyzer {
     List<ObjectProperty> properties,
     ConstructorElement constructor,
   ) {
-    if (properties.map((e) => e.isarName).distinct().length !=
-        properties.length) {
+    if (properties.map((e) => e.isarName).distinct().length != properties.length) {
       err(
         'Two or more properties have the same name.',
         constructor.enclosingElement,
@@ -198,8 +194,7 @@ class IsarAnalyzer {
       }
 
       final enumClass = scalarDartType.element! as EnumElement;
-      final enumElements =
-          enumClass.fields.where((f) => f.isEnumConstant).toList();
+      final enumElements = enumClass.fields.where((f) => f.isEnumConstant).toList();
       defaultEnumElement = '${enumClass.name}.${enumElements.first.name}';
 
       if (enumeratedAnn.type == EnumType.ordinal) {
@@ -216,8 +211,7 @@ class IsarAnalyzer {
         };
         enumPropertyName = 'index';
       } else if (enumeratedAnn.type == EnumType.name) {
-        isarType =
-            dartType.isDartCoreList ? IsarType.stringList : IsarType.string;
+        isarType = dartType.isDartCoreList ? IsarType.stringList : IsarType.string;
         enumMap = {
           for (final value in enumElements) value.name: value.name,
         };
@@ -246,16 +240,11 @@ class IsarAnalyzer {
           err('Unsupported enum property type.', enumProperty);
         }
 
-        isarType =
-            dartType.isDartCoreList ? enumIsarType!.listType : enumIsarType!;
+        isarType = dartType.isDartCoreList ? enumIsarType!.listType : enumIsarType!;
         enumMap = {};
         for (final element in enumElements) {
-          final property =
-              element.computeConstantValue()!.getField(enumPropertyName)!;
-          final propertyValue = property.toBoolValue() ??
-              property.toIntValue() ??
-              property.toDoubleValue() ??
-              property.toStringValue();
+          final property = element.computeConstantValue()!.getField(enumPropertyName)!;
+          final propertyValue = property.toBoolValue() ?? property.toIntValue() ?? property.toDoubleValue() ?? property.toStringValue();
           if (propertyValue == null) {
             err(
               'Null values are not supported for enum properties.',
@@ -284,16 +273,13 @@ class IsarAnalyzer {
     }
 
     final nullable = dartType.nullabilitySuffix != NullabilitySuffix.none;
-    final elementNullable = isarType.isList &&
-        dartType.scalarType.nullabilitySuffix != NullabilitySuffix.none;
+    final elementNullable = isarType.isList && dartType.scalarType.nullabilitySuffix != NullabilitySuffix.none;
 
-    if ((isarType == IsarType.byte && nullable) ||
-        (isarType == IsarType.byteList && elementNullable)) {
+    if ((isarType == IsarType.byte && nullable) || (isarType == IsarType.byteList && elementNullable)) {
       err('Bytes must not be nullable.', property);
     }
 
-    final constructorParameter =
-        constructor.parameters.firstOrNullWhere((p) => p.name == property.name);
+    final constructorParameter = constructor.parameters.firstOrNullWhere((p) => p.name == property.name);
     int? constructorPosition;
     late PropertyDeser deserialize;
     if (constructorParameter != null) {
@@ -304,31 +290,25 @@ class IsarAnalyzer {
       //     constructorParameter,
       //   );
       // }
-      deserialize = constructorParameter.isNamed
-          ? PropertyDeser.namedParam
-          : PropertyDeser.positionalParam;
-      constructorPosition =
-          constructor.parameters.indexOf(constructorParameter);
+      deserialize = constructorParameter.isNamed ? PropertyDeser.namedParam : PropertyDeser.positionalParam;
+      constructorPosition = constructor.parameters.indexOf(constructorParameter);
     } else {
-      deserialize =
-          property.setter == null ? PropertyDeser.none : PropertyDeser.assign;
+      deserialize = property.setter == null ? PropertyDeser.none : PropertyDeser.assign;
     }
 
-            String? mapKeyType;
-        String? mapValueType;
-        if (dartType.isDartCoreMap) {
-          final mapElement = dartType as ParameterizedType;
-          mapKeyType = mapElement.typeArguments[0].getDisplayString(withNullability: true);
-          mapValueType = mapElement.typeArguments[1].getDisplayString(withNullability: true);
-        }
+    String? mapKeyType;
+    String? mapValueType;
+    if (dartType.isDartCoreMap) {
+      final mapElement = dartType as ParameterizedType;
+      mapKeyType = mapElement.typeArguments[0].getDisplayString(withNullability: true);
+      mapValueType = mapElement.typeArguments[1].getDisplayString(withNullability: true);
+    }
 
     return ObjectProperty(
       dartName: property.displayName,
       isarName: property.isarName,
       typeClassName: dartType.scalarType.element!.name!,
-      targetIsarName: isarType.containsObject
-          ? dartType.scalarType.element!.isarName
-          : null,
+      targetIsarName: isarType.containsObject ? dartType.scalarType.element!.isarName : null,
       isarType: isarType,
       isId: dartType.isIsarId,
       enumMap: enumMap,
@@ -367,8 +347,7 @@ class IsarAnalyzer {
     final backlinkAnn = property.backlinkAnnotation;
     String? targetLinkIsarName;
     if (backlinkAnn != null) {
-      final targetProperty = targetCol.allAccessors
-          .firstOrNullWhere((e) => e.displayName == backlinkAnn.to);
+      final targetProperty = targetCol.allAccessors.firstOrNullWhere((e) => e.displayName == backlinkAnn.to);
       if (targetProperty == null) {
         err('Target of Backlink does not exist', property);
       } else if (targetProperty.backlinkAnnotation != null) {
@@ -397,19 +376,15 @@ class IsarAnalyzer {
     List<ObjectProperty> properties,
     PropertyInducingElement element,
   ) sync* {
-    final property =
-        properties.firstOrNullWhere((it) => it.dartName == element.name);
+    final property = properties.firstOrNullWhere((it) => it.dartName == element.name);
     if (property == null || property.isId) {
       return;
     }
 
     for (final index in element.indexAnnotations) {
       final indexProperties = <ObjectIndexProperty>[];
-      final isString = property.isarType == IsarType.string ||
-          property.isarType == IsarType.stringList;
-      final defaultType = property.isarType.isList || isString
-          ? IndexType.hash
-          : IndexType.value;
+      final isString = property.isarType == IsarType.string || property.isarType == IsarType.stringList;
+      final defaultType = property.isarType.isList || isString ? IndexType.hash : IndexType.value;
 
       indexProperties.add(
         ObjectIndexProperty(
@@ -419,18 +394,14 @@ class IsarAnalyzer {
         ),
       );
       for (final c in index.composite) {
-        final compositeProperty =
-            properties.firstOrNullWhere((it) => it.dartName == c.property);
+        final compositeProperty = properties.firstOrNullWhere((it) => it.dartName == c.property);
         if (compositeProperty == null) {
           err('Property does not exist: "${c.property}".', element);
         } else if (compositeProperty.isId) {
           err('Ids cannot be indexed', element);
         } else {
-          final isString = compositeProperty.isarType == IsarType.string ||
-              compositeProperty.isarType == IsarType.stringList;
-          final defaultType = compositeProperty.isarType.isList || isString
-              ? IndexType.hash
-              : IndexType.value;
+          final isString = compositeProperty.isarType == IsarType.string || compositeProperty.isarType == IsarType.stringList;
+          final defaultType = compositeProperty.isarType.isList || isString ? IndexType.hash : IndexType.value;
           indexProperties.add(
             ObjectIndexProperty(
               property: compositeProperty,
@@ -441,8 +412,7 @@ class IsarAnalyzer {
         }
       }
 
-      final name = index.name ??
-          indexProperties.map((e) => e.property.isarName).join('_');
+      final name = index.name ?? indexProperties.map((e) => e.property.isarName).join('_');
       checkIsarName(name, element);
 
       final objectIndex = ObjectIndex(
@@ -460,16 +430,13 @@ class IsarAnalyzer {
   void _verifyObjectIndex(ObjectIndex index, Element element) {
     final properties = index.properties;
 
-    if (properties.map((it) => it.property.isarName).distinct().length !=
-        properties.length) {
+    if (properties.map((it) => it.property.isarName).distinct().length != properties.length) {
       err('Composite index contains duplicate properties.', element);
     }
 
     for (var i = 0; i < properties.length; i++) {
       final property = properties[i];
-      if (property.isarType.isList &&
-          property.type != IndexType.hash &&
-          properties.length > 1) {
+      if (property.isarType.isList && property.type != IndexType.hash && properties.length > 1) {
         err('Composite indexes do not support non-hashed lists.', element);
       }
       if (property.isarType.containsFloat && i != properties.lastIndex) {
@@ -501,8 +468,7 @@ class IsarAnalyzer {
           err('List<double> may must not be hashed.', element);
         }
       }
-      if (property.isarType != IsarType.stringList &&
-          property.type == IndexType.hashElements) {
+      if (property.isarType != IsarType.stringList && property.type == IndexType.hashElements) {
         err('Only String lists may have hashed elements.', element);
       }
     }
