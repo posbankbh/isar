@@ -1,5 +1,4 @@
 library isar;
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
@@ -16,6 +15,8 @@ import 'package:isar/src/native/split_words.dart'
     if (dart.library.html) 'package:isar/src/web/split_words.dart';
 import 'package:meta/meta.dart';
 import 'package:meta/meta_meta.dart';
+
+export 'dart:convert';
 
 part 'src/annotations/backlink.dart';
 part 'src/annotations/collection.dart';
@@ -41,6 +42,7 @@ part 'src/schema/index_schema.dart';
 part 'src/schema/link_schema.dart';
 part 'src/schema/property_schema.dart';
 part 'src/schema/schema.dart';
+
 
 /// @nodoc
 @protected

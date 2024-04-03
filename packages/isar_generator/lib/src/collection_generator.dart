@@ -53,8 +53,6 @@ class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
       // coverage:ignore-file
       // ignore_for_file: ${ignoreLints.join(', ')}
 
-      import 'dart:convert';
-
       extension Get${object.dartName}Collection on Isar {
         IsarCollection<${object.dartName}> get ${object.accessor} => this.collection();
       }
@@ -100,8 +98,6 @@ class IsarEmbeddedGenerator extends GeneratorForAnnotation<Embedded> {
     return '''
       // coverage:ignore-file
       // ignore_for_file: ${ignoreLints.join(', ')}
-
-      import 'dart:convert';
 
       ${generateSchema(object)}
 
