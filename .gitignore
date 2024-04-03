@@ -16,16 +16,6 @@
 .pub/
 build/
 
-# Rust related
-target/
-*.a
-*.so
-*.dylib
-*.dll
-*.zip
-*.xcframework/
-isar-dart.h
-
 # Android related
 **/android/**/gradle-wrapper.jar
 .gradle/
