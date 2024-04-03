@@ -38,6 +38,9 @@ const ignoreLints = [
 ];
 
 class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
+  IsarCollectionGenerator(){
+    Config.readFromPubspec();
+  }
 
   @override
   Future<String> generateForAnnotatedElement(
@@ -83,7 +86,9 @@ class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
 }
 
 class IsarEmbeddedGenerator extends GeneratorForAnnotation<Embedded> {
-  IsarEmbeddedGenerator();
+  IsarEmbeddedGenerator(){
+    Config.readFromPubspec();
+  }
 
   @override
   Future<String> generateForAnnotatedElement(
