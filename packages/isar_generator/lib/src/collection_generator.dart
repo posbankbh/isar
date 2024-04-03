@@ -101,6 +101,8 @@ class IsarEmbeddedGenerator extends GeneratorForAnnotation<Embedded> {
       // coverage:ignore-file
       // ignore_for_file: ${ignoreLints.join(', ')}
 
+      import 'dart:convert';
+
       ${generateSchema(object)}
 
       ${generateEstimateSerialize(object)}
