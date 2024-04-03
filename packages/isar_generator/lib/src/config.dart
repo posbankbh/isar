@@ -21,8 +21,9 @@ class Config {
     this.classesToIgnore = const [],
     this.skipNotSupportedProperty = true,
   });
+  static  Config instance = Config();
 
-  factory Config.readFromPubspec() {
+  void readFromPubspec() {
     final file = File(_pubspecFile);
     if (file.existsSync()) {
       final yaml = loadYaml(file.readAsStringSync())[_pubspecKey] as YamlMap?;
@@ -46,14 +47,14 @@ class Config {
           skipNotSupportedProperty = true;
         }
 
-        return Config(
+        instance = Config(
           classesToIgnore: classesToIgnore,
           skipNotSupportedProperty: skipNotSupportedProperty,
         );
       }
     }
-    return Config();
   }
+
   final List<String> classesToIgnore;
   final bool skipNotSupportedProperty;
 }

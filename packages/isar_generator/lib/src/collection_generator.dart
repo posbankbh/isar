@@ -38,9 +38,6 @@ const ignoreLints = [
 ];
 
 class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
-  IsarCollectionGenerator(this.config);
-
-  Config config;
 
   @override
   Future<String> generateForAnnotatedElement(
@@ -48,7 +45,7 @@ class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
-    final object = IsarAnalyzer().analyzeCollection(element, config);
+    final object = IsarAnalyzer().analyzeCollection(element);
     return '''
       // coverage:ignore-file
       // ignore_for_file: ${ignoreLints.join(', ')}
@@ -86,8 +83,7 @@ class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
 }
 
 class IsarEmbeddedGenerator extends GeneratorForAnnotation<Embedded> {
-  IsarEmbeddedGenerator(this.config);
-  Config config;
+  IsarEmbeddedGenerator();
 
   @override
   Future<String> generateForAnnotatedElement(
@@ -95,7 +91,7 @@ class IsarEmbeddedGenerator extends GeneratorForAnnotation<Embedded> {
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
-    final object = IsarAnalyzer().analyzeEmbedded(element, config);
+    final object = IsarAnalyzer().analyzeEmbedded(element);
     return '''
       // coverage:ignore-file
       // ignore_for_file: ${ignoreLints.join(', ')}

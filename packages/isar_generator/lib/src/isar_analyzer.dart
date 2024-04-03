@@ -10,16 +10,14 @@ import 'package:isar_generator/src/isar_type.dart';
 import 'package:isar_generator/src/object_info.dart';
 
 class IsarAnalyzer {
-  ObjectInfo analyzeCollection(Element element, Config config) {
+  ObjectInfo analyzeCollection(Element element) {
     final constructor = _checkValidClass(element);
     final modelClass = element as ClassElement;
 
     final properties = <ObjectProperty>[];
     final links = <ObjectLink>[];
     for (final propertyElement in modelClass.allAccessors) {
-      if (propertyElement.enclosingElement != null && config.classesToIgnore.contains(propertyElement.enclosingElement!.name)) {
-        continue;
-      }
+
 
       if (propertyElement.isLink || propertyElement.isLinks) {
         final link = analyzeObjectLink(propertyElement);
@@ -63,7 +61,7 @@ class IsarAnalyzer {
     );
   }
 
-  ObjectInfo analyzeEmbedded(Element element, Config config) {
+  ObjectInfo analyzeEmbedded(Element element) {
     final constructor = _checkValidClass(element);
     final modelClass = element as ClassElement;
 

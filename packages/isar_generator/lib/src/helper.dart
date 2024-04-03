@@ -5,6 +5,8 @@ import 'package:dartx/dartx.dart';
 import 'package:isar/isar.dart';
 import 'package:source_gen/source_gen.dart';
 
+import 'config.dart';
+
 const TypeChecker _collectionChecker = TypeChecker.fromRuntime(Collection);
 const TypeChecker _enumeratedChecker = TypeChecker.fromRuntime(Enumerated);
 const TypeChecker _embeddedChecker = TypeChecker.fromRuntime(Embedded);
@@ -12,6 +14,7 @@ const TypeChecker _ignoreChecker = TypeChecker.fromRuntime(Ignore);
 const TypeChecker _nameChecker = TypeChecker.fromRuntime(Name);
 const TypeChecker _indexChecker = TypeChecker.fromRuntime(Index);
 const TypeChecker _backlinkChecker = TypeChecker.fromRuntime(Backlink);
+
 
 extension ClassElementX on ClassElement {
   bool get hasZeroArgsConstructor {
@@ -38,7 +41,8 @@ extension ClassElementX on ClassElement {
               e.isPublic &&
               !e.isStatic &&
               !_ignoreChecker.hasAnnotationOf(e.nonSynthetic) &&
-              !ignoreFields.contains(e.name),
+              !ignoreFields.contains(e.name) && 
+              !(e.enclosingElement != null && Config.instance.classesToIgnore.contains(e.enclosingElement!.name)),
         )
         .distinctBy((e) => e.name)
         .toList();
