@@ -37,7 +37,7 @@ extension ClassElementX on ClassElement {
           (PropertyInducingElement e) =>
               e.isPublic &&
               !e.isStatic &&
-              !_ignoreChecker.hasAnnotationOf(e) &&
+              !_ignoreChecker.hasAnnotationOf(e.nonSynthetic) &&
               !ignoreFields.contains(e.name),
         )
         .distinctBy((e) => e.name)

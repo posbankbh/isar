@@ -13,6 +13,7 @@ import 'package:isar_generator/src/code_gen/query_property_generator.dart';
 import 'package:isar_generator/src/code_gen/query_sort_by_generator.dart';
 import 'package:isar_generator/src/code_gen/query_where_generator.dart';
 import 'package:isar_generator/src/code_gen/type_adapter_generator.dart';
+import 'package:isar_generator/src/config.dart';
 import 'package:isar_generator/src/isar_analyzer.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -37,13 +38,17 @@ const ignoreLints = [
 ];
 
 class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
+  IsarCollectionGenerator(this.config);
+
+  Config config;
+
   @override
   Future<String> generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
-    final object = IsarAnalyzer().analyzeCollection(element);
+    final object = IsarAnalyzer().analyzeCollection(element, config);
     return '''
       // coverage:ignore-file
       // ignore_for_file: ${ignoreLints.join(', ')}
@@ -81,13 +86,16 @@ class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
 }
 
 class IsarEmbeddedGenerator extends GeneratorForAnnotation<Embedded> {
+  IsarEmbeddedGenerator(this.config);
+  Config config;
+
   @override
   Future<String> generateForAnnotatedElement(
     Element element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
-    final object = IsarAnalyzer().analyzeEmbedded(element);
+    final object = IsarAnalyzer().analyzeEmbedded(element, config);
     return '''
       // coverage:ignore-file
       // ignore_for_file: ${ignoreLints.join(', ')}

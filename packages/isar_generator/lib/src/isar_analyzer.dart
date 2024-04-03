@@ -3,19 +3,24 @@ import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dartx/dartx.dart';
 import 'package:isar/isar.dart';
+import 'package:isar_generator/src/config.dart';
 
 import 'package:isar_generator/src/helper.dart';
 import 'package:isar_generator/src/isar_type.dart';
 import 'package:isar_generator/src/object_info.dart';
 
 class IsarAnalyzer {
-  ObjectInfo analyzeCollection(Element element) {
+  ObjectInfo analyzeCollection(Element element, Config config) {
     final constructor = _checkValidClass(element);
     final modelClass = element as ClassElement;
 
     final properties = <ObjectProperty>[];
     final links = <ObjectLink>[];
     for (final propertyElement in modelClass.allAccessors) {
+      if (propertyElement.enclosingElement != null && config.classesToIgnore.contains(propertyElement.enclosingElement!.name)) {
+        continue;
+      }
+
       if (propertyElement.isLink || propertyElement.isLinks) {
         final link = analyzeObjectLink(propertyElement);
         links.add(link);
@@ -58,7 +63,7 @@ class IsarAnalyzer {
     );
   }
 
-  ObjectInfo analyzeEmbedded(Element element) {
+  ObjectInfo analyzeEmbedded(Element element, Config config) {
     final constructor = _checkValidClass(element);
     final modelClass = element as ClassElement;
 
@@ -283,7 +288,7 @@ class IsarAnalyzer {
     int? constructorPosition;
     late PropertyDeser deserialize;
     if (constructorParameter != null) {
-      //TODO:33333333
+      //TODO:Disabled by POSBANK
       // if (constructorParameter.type != property.type) {
       //   err(
       //     'Constructor parameter type does not match property type',
