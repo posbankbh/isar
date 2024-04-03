@@ -31,7 +31,6 @@ class Config {
         late final bool skipNotSupportedProperty;
         late final List<String> classesToIgnore;
 
-        final outDirYaml = yaml['output_dir'];
         final ignoreClasses = yaml['ignore_super_classes'];
         final optionsYaml = yaml['options'];
 
