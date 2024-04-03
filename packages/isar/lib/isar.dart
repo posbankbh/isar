@@ -16,8 +16,6 @@ import 'package:isar/src/native/split_words.dart'
 import 'package:meta/meta.dart';
 import 'package:meta/meta_meta.dart';
 
-export 'dart:convert';
-
 part 'src/annotations/backlink.dart';
 part 'src/annotations/collection.dart';
 part 'src/annotations/embedded.dart';
