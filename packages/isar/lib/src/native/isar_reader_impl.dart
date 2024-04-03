@@ -282,7 +282,7 @@ class IsarReaderImpl implements IsarReader {
     final length = _readUint24(listOffset);
     listOffset += 3;
 
-    final list = List<bool>.filled(length, false);
+    final list = List<bool>.filled(length, false, growable: true);
     for (var i = 0; i < length; i++) {
       list[i] = _readBool(listOffset + i);
     }
@@ -303,7 +303,7 @@ class IsarReaderImpl implements IsarReader {
     final length = _readUint24(listOffset);
     listOffset += 3;
 
-    final list = List<bool?>.filled(length, null);
+    final list = List<bool?>.filled(length, null, growable: true);
     for (var i = 0; i < length; i++) {
       list[i] = _readBoolOrNull(listOffset + i);
     }
@@ -362,7 +362,7 @@ class IsarReaderImpl implements IsarReader {
     final length = _readUint24(listOffset);
     listOffset += 3;
 
-    final list = List<int?>.filled(length, null);
+    final list = List<int?>.filled(length, null, growable: true);
     for (var i = 0; i < length; i++) {
       list[i] = _readIntOrNull(listOffset + i * 4);
     }
@@ -404,7 +404,7 @@ class IsarReaderImpl implements IsarReader {
     final length = _readUint24(listOffset);
     listOffset += 3;
 
-    final list = List<double?>.filled(length, null);
+    final list = List<double?>.filled(length, null, growable: true);
     for (var i = 0; i < length; i++) {
       list[i] = _readFloatOrNull(listOffset + i * 4);
     }
@@ -446,7 +446,7 @@ class IsarReaderImpl implements IsarReader {
     final length = _readUint24(listOffset);
     listOffset += 3;
 
-    final list = List<int?>.filled(length, null);
+    final list = List<int?>.filled(length, null, growable: true);
     for (var i = 0; i < length; i++) {
       list[i] = _readLongOrNull(listOffset + i * 8);
     }
@@ -488,7 +488,7 @@ class IsarReaderImpl implements IsarReader {
     final length = _readUint24(listOffset);
     listOffset += 3;
 
-    final list = List<double?>.filled(length, null);
+    final list = List<double?>.filled(length, null, growable: true);
     for (var i = 0; i < length; i++) {
       list[i] = _readDoubleOrNull(listOffset + i * 8);
     }
@@ -532,7 +532,7 @@ class IsarReaderImpl implements IsarReader {
     final length = _readUint24(listOffset);
     listOffset += 3;
 
-    final list = List.filled(length, nullValue);
+    final list = List.filled(length, nullValue, growable: true);
     var contentOffset = listOffset + length * 3;
     for (var i = 0; i < length; i++) {
       final itemSize = _readUint24(listOffset + i * 3);
