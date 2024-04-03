@@ -373,7 +373,7 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
       return 'reader.readDateTime$orNull($propertyOffset)';
     case IsarType.string:
       if (property.isMap) {
-        return 'decodeMap<${property.mapKeyType}, ${property.mapValueType}>(reader.readString$orNull($propertyOffset))';
+        return '_decodeMap<${property.mapKeyType}, ${property.mapValueType}>(reader.readString$orNull($propertyOffset))';
       } else {
         return 'reader.readString$orNull($propertyOffset)';
       }
@@ -481,7 +481,7 @@ String generateEnumMaps(ObjectInfo object) {
 }
 
 String generateMapDecoderHelper(ObjectInfo object) {
-  var code = 'Map<TKey, TValue>? decodeMap<TKey, TValue>(String? data)';
+  var code = 'Map<TKey, TValue>? _decodeMap<TKey, TValue>(String? data)';
   code += '{';
   code += '   if (data == null) return null;';
   code += '      return (jsonDecode(data) as Map?)?.cast<TKey, TValue>();';
