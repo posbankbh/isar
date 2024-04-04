@@ -65,13 +65,6 @@ class IsarAnalyzer {
     final constructor = _checkValidClass(element);
     final modelClass = element as ClassElement;
 
-    if (constructor.parameters.any((e) => e.isRequired)) {
-      err(
-        'Constructors of embedded objects must not have required parameters.',
-        constructor,
-      );
-    }
-
     final properties = <ObjectProperty>[];
     for (final propertyElement in modelClass.allAccessors) {
       if (propertyElement.isLink || propertyElement.isLinks) {
