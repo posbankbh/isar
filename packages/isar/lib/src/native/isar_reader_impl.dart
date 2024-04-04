@@ -546,6 +546,37 @@ class IsarReaderImpl implements IsarReader {
     return list;
   }
 
+  List<T>? readDynamicListNoDefaultValue<T>(
+    int offset,
+    T Function(int startOffset, int endOffset) transform,
+  ) {
+    if (offset >= _staticSize) {
+      return null;
+    }
+
+    var listOffset = _readUint24(offset);
+    if (listOffset == 0) {
+      return null;
+    }
+
+    final length = _readUint24(listOffset);
+    listOffset += 3;
+
+    final list = <T>[];
+    var contentOffset = listOffset + length * 3;
+    for (var i = 0; i < length; i++) {
+      final itemSize = _readUint24(listOffset + i * 3);
+
+      if (itemSize != 0) {
+        list.add(transform(contentOffset, contentOffset + itemSize - 1));
+        contentOffset += itemSize - 1;
+      }
+    }
+
+    return list;
+  }
+
+
   @override
   List<String>? readStringList(int offset) {
     return readDynamicList(offset, '', (startOffset, endOffset) {
@@ -583,6 +614,20 @@ class IsarReaderImpl implements IsarReader {
   ) {
     final offsets = allOffsets[T]!;
     return readDynamicList(offset, null, (startOffset, endOffset) {
+      final buffer = Uint8List.sublistView(_buffer, startOffset, endOffset);
+      final reader = IsarReaderImpl(buffer);
+      return deserialize(0, reader, offsets, allOffsets);
+    });
+  }
+
+  @override
+  List<T>? readObjectOrNullListNoNullableElements<T>(
+    int offset,
+    Deserialize<T> deserialize,
+    Map<Type, List<int>> allOffsets,
+  ) {
+    final offsets = allOffsets[T]!;
+    return readDynamicListNoDefaultValue(offset, (startOffset, endOffset) {
       final buffer = Uint8List.sublistView(_buffer, startOffset, endOffset);
       final reader = IsarReaderImpl(buffer);
       return deserialize(0, reader, offsets, allOffsets);
