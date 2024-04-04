@@ -406,7 +406,7 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
           $propertyOffset,
           ${property.targetSchema}.deserialize,
           allOffsets,
-        )''';
+        )${property.elementNullable ? '' : '?.cast<${property.typeClassName}>'}''';
   }
 }
 
