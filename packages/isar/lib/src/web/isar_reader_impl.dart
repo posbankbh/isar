@@ -344,4 +344,27 @@ class IsarReaderImpl implements IsarReader {
           }).toList()
         : null;
   }
+
+  
+  @tryInline
+  @override
+  List<T>? readObjectOrNullListNoNullableElements<T>(
+    int offset,
+    Deserialize<T> deserialize,
+    Map<Type, List<int>> allOffsets,
+  ) {
+    final value = getProperty<dynamic>(object, offset);
+    try{
+    return value is List
+        ? value.map((e) {
+            if (e is Object) {
+              final reader = IsarReaderImpl(e);
+              return deserialize(0, reader, allOffsets[T]!, allOffsets);
+            } else {
+              throw Exception();
+            }
+          }).toList()
+        : null;
+    }on Exception { return null; }
+  }
 }

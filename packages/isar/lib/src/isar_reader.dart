@@ -85,4 +85,10 @@ abstract class IsarReader {
     Deserialize<T> deserialize,
     Map<Type, List<int>> allOffsets,
   );
+
+  List<T>? readObjectOrNullListNoNullableElements<T>(
+    int offset,
+    Deserialize<T> deserialize,
+    Map<Type, List<int>> allOffsets,
+  );
 }

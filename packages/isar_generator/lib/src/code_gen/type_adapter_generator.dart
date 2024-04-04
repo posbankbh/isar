@@ -401,12 +401,22 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
     case IsarType.stringList:
       return 'reader.readString${orElNull}List($propertyOffset)';
     case IsarType.objectList:
-      return '''
+      if (property.elementNullable) {
+        return '''
         reader.readObjectOrNullList<${property.typeClassName}>(
           $propertyOffset,
           ${property.targetSchema}.deserialize,
           allOffsets,
-        )${property.elementNullable ? '' : '?.cast<${property.typeClassName}>'}''';
+        )''';
+      }
+      else{
+        return '''
+        reader.readObjectOrNullListNoNullableElements<${property.typeClassName}>(
+          $propertyOffset,
+          ${property.targetSchema}.deserialize,
+          allOffsets,
+        )''';
+      }
   }
 }
 
