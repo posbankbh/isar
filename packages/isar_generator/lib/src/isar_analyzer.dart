@@ -503,7 +503,13 @@ class IsarAnalyzer {
         }
       }
     } else {
-      err('converters is null !');
+      if (dartType.element == null) {
+        err('element is null !');
+      } else if (dartType.element?.collectionAnnotation == null) {
+        err('collection is null !');
+      } else {
+        err('converters is null !');
+      }
     }
 
     return null;
