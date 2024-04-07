@@ -1,3 +1,7 @@
+// ignore_for_file: lines_longer_than_80_chars
+
+import 'dart:mirrors';
+
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
@@ -8,6 +12,7 @@ import 'package:isar_generator/src/config.dart';
 import 'package:isar_generator/src/helper.dart';
 import 'package:isar_generator/src/isar_type.dart';
 import 'package:isar_generator/src/object_info.dart';
+import 'package:source_gen/source_gen.dart';
 
 class IsarAnalyzer {
   ObjectInfo analyzeCollection(Element element) {
@@ -17,8 +22,6 @@ class IsarAnalyzer {
     final properties = <ObjectProperty>[];
     final links = <ObjectLink>[];
     for (final propertyElement in modelClass.allAccessors) {
-
-
       if (propertyElement.isLink || propertyElement.isLinks) {
         final link = analyzeObjectLink(propertyElement);
         links.add(link);
@@ -181,6 +184,7 @@ class IsarAnalyzer {
     Map<String, dynamic>? enumMap;
     String? enumPropertyName;
     String? defaultEnumElement;
+    String? converter;
 
     late final IsarType isarType;
     if (scalarDartType.element is EnumElement) {
@@ -261,10 +265,22 @@ class IsarAnalyzer {
       if (dartType.isarType != null) {
         isarType = dartType.isarType!;
       } else {
-        err(
-          'Unsupported type. Please annotate the property with @ignore.',
-          property,
-        );
+        //check if we have converter for this field type
+        converter = _checkConverters(dartType);
+        if (converter != null) {
+          if (converter == 'IntTypeConverter') {
+            isarType = IsarType.int;
+          } else if (converter == 'StringTypeConverter') {
+            isarType = IsarType.string;
+          } else {
+            throw InvalidGenerationSourceError('Non implemented');
+          }
+        } else {
+          err(
+            'Unsupported type. Please annotate the property with @ignore, Or use [Converters] - Ask Mohammed -.',
+            property,
+          );
+        }
       }
     }
 
@@ -319,6 +335,8 @@ class IsarAnalyzer {
       isMap: dartType.isDartCoreMap,
       mapKeyType: mapKeyType,
       mapValueType: mapValueType,
+      isDynamic: dartType is DynamicType,
+      converter: converter,
     );
   }
 
@@ -472,5 +490,20 @@ class IsarAnalyzer {
     if (!index.unique && index.replace) {
       err('Only unique indexes can replace.', element);
     }
+  }
+
+  String? _checkConverters(DartType dartType) {
+    final converters = dartType.element?.collectionAnnotation?.converters ?? dartType.element?.embeddedAnnotation?.converters;
+
+    if (converters != null) {
+      for (final converter in converters) {
+        final mirror = reflectType(converter.runtimeType, [dartType.runtimeType]);
+        if (mirror.hasReflectedType) {
+          return MirrorSystem.getName(mirror.simpleName);
+        }
+      }
+    }
+
+    return null;
   }
 }

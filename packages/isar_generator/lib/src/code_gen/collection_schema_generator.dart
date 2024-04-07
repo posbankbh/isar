@@ -1,6 +1,5 @@
 import 'package:dartx/dartx.dart';
 import 'package:isar/isar.dart';
-import 'package:isar_generator/src/isar_type.dart';
 
 import 'package:isar_generator/src/object_info.dart';
 
@@ -29,15 +28,9 @@ String generateSchema(ObjectInfo object) {
     deserializeProp: ${object.deserializePropName},''';
 
   if (!object.isEmbedded) {
-    final indexes = object.indexes
-        .map((e) => "r'${e.name}': ${_generateIndexSchema(e)}")
-        .join(',');
-    final links = object.links
-        .map((e) => "r'${e.isarName}': ${_generateLinkSchema(object, e)}")
-        .join(',');
-    final embeddedSchemas = object.embeddedDartNames.entries
-        .map((e) => "r'${e.key}': ${e.value.capitalize()}Schema")
-        .join(',');
+    final indexes = object.indexes.map((e) => "r'${e.name}': ${_generateIndexSchema(e)}").join(',');
+    final links = object.links.map((e) => "r'${e.isarName}': ${_generateLinkSchema(object, e)}").join(',');
+    final embeddedSchemas = object.embeddedDartNames.entries.map((e) => "r'${e.key}': ${e.value.capitalize()}Schema").join(',');
 
     code += '''
       idName: r'${object.idProperty.isarName}',

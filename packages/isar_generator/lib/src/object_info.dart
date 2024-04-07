@@ -33,8 +33,7 @@ class ObjectInfo {
 
   ObjectProperty get idProperty => properties.firstWhere((it) => it.isId);
 
-  List<ObjectProperty> get objectProperties =>
-      properties.where((it) => !it.isId).toList();
+  List<ObjectProperty> get objectProperties => properties.where((it) => !it.isId).toList();
 
   String get getIdName => '_${dartName.decapitalize()}GetId';
   String get getLinksName => '_${dartName.decapitalize()}GetLinks';
@@ -43,8 +42,7 @@ class ObjectInfo {
   String get estimateSizeName => '_${dartName.decapitalize()}EstimateSize';
   String get serializeName => '_${dartName.decapitalize()}Serialize';
   String get deserializeName => '_${dartName.decapitalize()}Deserialize';
-  String get deserializePropName =>
-      '_${dartName.decapitalize()}DeserializeProp';
+  String get deserializePropName => '_${dartName.decapitalize()}DeserializeProp';
 }
 
 enum PropertyDeser {
@@ -74,6 +72,8 @@ class ObjectProperty {
     this.isMap = false,
     this.mapKeyType,
     this.mapValueType,
+    this.isDynamic = false,
+    this.converter,
   });
 
   final String dartName;
@@ -97,6 +97,8 @@ class ObjectProperty {
   final bool isMap;
   final String? mapKeyType;
   final String? mapValueType;
+  final bool isDynamic;
+  final String? converter;
 
   bool get isEnum => enumMap != null;
 
@@ -135,13 +137,9 @@ class ObjectProperty {
     }
   }
 
-  String get nScalarDartType => isarType.isList
-      ? '$scalarDartType${elementNullable ? '?' : ''}'
-      : '$scalarDartType${nullable ? '?' : ''}';
+  String get nScalarDartType => isarType.isList ? '$scalarDartType${elementNullable ? '?' : ''}' : '$scalarDartType${nullable ? '?' : ''}';
 
-  String get dartType => isarType.isList
-      ? 'List<$nScalarDartType>${nullable ? '?' : ''}'
-      : nScalarDartType;
+  String get dartType => isarType.isList ? 'List<$nScalarDartType>${nullable ? '?' : ''}' : nScalarDartType;
 
   String get targetSchema => '${scalarDartType.capitalize()}Schema';
 

@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, invalid_use_of_protected_member
 
-import 'dart:convert';
 import 'dart:ffi';
 import 'dart:isolate';
 
@@ -13,8 +12,7 @@ import 'package:isar/src/native/isar_collection_impl.dart';
 import 'package:isar/src/native/isar_core.dart';
 import 'package:isar/src/native/isar_impl.dart';
 
-final Pointer<Pointer<CIsarInstance>> _isarPtrPtr =
-    malloc<Pointer<CIsarInstance>>();
+final Pointer<Pointer<CIsarInstance>> _isarPtrPtr = malloc<Pointer<CIsarInstance>>();
 
 List<int> _getOffsets(
   Pointer<CIsarCollection> colPtr,
@@ -90,8 +88,7 @@ Future<Isar> openIsar({
 
     final compactMinFileSize = compactOnLaunch?.minFileSize;
     final compactMinBytes = compactOnLaunch?.minBytes;
-    final compactMinRatio =
-        compactOnLaunch == null ? double.nan : compactOnLaunch.minRatio;
+    final compactMinRatio = compactOnLaunch == null ? double.nan : compactOnLaunch.minRatio;
 
     final receivePort = ReceivePort();
     final nativePort = receivePort.sendPort.nativePort;
@@ -135,8 +132,7 @@ Isar openIsarSync({
 
     final compactMinFileSize = compactOnLaunch?.minFileSize;
     final compactMinBytes = compactOnLaunch?.minBytes;
-    final compactMinRatio =
-        compactOnLaunch == null ? double.nan : compactOnLaunch.minRatio;
+    final compactMinRatio = compactOnLaunch == null ? double.nan : compactOnLaunch.minRatio;
 
     nCall(
       IC.isar_instance_create(

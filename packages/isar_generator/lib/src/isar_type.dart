@@ -83,6 +83,8 @@ extension DartTypeX on DartType {
       }
     } else if (isDartCoreMap) {
       return IsarType.string;
+    } else if (this is DynamicType) {
+      return IsarType.string; //As json
     }
 
     return null;
