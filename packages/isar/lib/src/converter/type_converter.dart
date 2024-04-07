@@ -10,28 +10,28 @@ abstract class Converter {
 
 abstract class IntTypeConverter<T extends Object> implements Converter {
   @override
-  int? write(covariant T obj);
+  int? write(covariant T? obj);
   @override
   T? read(covariant int? dbValue);
 }
 
 abstract class StringTypeConverter<T extends Object> implements Converter {
   @override
-  String? write(covariant T obj);
+  String? write(covariant T? obj);
   @override
   T? read(covariant String? dbValue);
 }
 
 abstract class DoubleTypeConverter<T extends Object> implements Converter {
   @override
-  Double? write(covariant T obj);
+  Double? write(covariant T? obj);
   @override
   T? read(covariant Double? dbValue);
 }
 
 abstract class BoolTypeConverter<T extends Object> implements Converter {
   @override
-  Bool? write(covariant T obj);
+  Bool? write(covariant T? obj);
   @override
   T? read(covariant Bool? dbValue);
 }
