@@ -498,12 +498,12 @@ class IsarAnalyzer {
     if (converters != null) {
       for (final converterType in converters) {
         final mirror = reflectType(converterType, [fieldDartType.runtimeType]);
-        err(mirror.toString());
-
         if (mirror.hasReflectedType) {
           return MirrorSystem.getName(mirror.simpleName);
         }
       }
+    } else {
+      err('converters is null');
     }
 
     return null;
