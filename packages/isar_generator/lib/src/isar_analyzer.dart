@@ -25,7 +25,7 @@ class IsarAnalyzer {
         final link = analyzeObjectLink(propertyElement);
         links.add(link);
       } else {
-        final property = analyzeObjectProperty(propertyElement, constructor);
+        final property = analyzeObjectProperty(propertyElement, constructor, modelClass);
         properties.add(property);
       }
     }
@@ -72,7 +72,7 @@ class IsarAnalyzer {
       if (propertyElement.isLink || propertyElement.isLinks) {
         err('Embedded objects must not contain links', propertyElement);
       } else {
-        final property = analyzeObjectProperty(propertyElement, constructor);
+        final property = analyzeObjectProperty(propertyElement, constructor, modelClass);
         properties.add(property);
       }
     }
@@ -177,6 +177,7 @@ class IsarAnalyzer {
   ObjectProperty analyzeObjectProperty(
     PropertyInducingElement property,
     ConstructorElement constructor,
+    ClassElement modelClass,
   ) {
     final dartType = property.type;
     final scalarDartType = dartType.scalarType;
@@ -265,7 +266,7 @@ class IsarAnalyzer {
         isarType = dartType.isarType!;
       } else {
         //check if we have converter for this field type
-        converter = _checkConverters(dartType);
+        converter = _checkConverters(dartType, modelClass);
         if (converter != null) {
           if (converter == 'IntTypeConverter') {
             isarType = IsarType.int;
@@ -491,24 +492,15 @@ class IsarAnalyzer {
     }
   }
 
-  String? _checkConverters(DartType dartType) {
-    final converters = dartType.element?.collectionAnnotation?.converters ?? dartType.element?.embeddedAnnotation?.converters;
+  String? _checkConverters(DartType fieldDartType, ClassElement classElement) {
+    final converters = classElement.collectionAnnotation?.converters ?? classElement.embeddedAnnotation?.converters;
 
     if (converters != null) {
       for (final converterType in converters) {
-        final mirror = reflectType(converterType, [dartType.runtimeType]);
-        err(mirror.toString());
+        final mirror = reflectType(converterType, [fieldDartType.runtimeType]);
         if (mirror.hasReflectedType) {
           return MirrorSystem.getName(mirror.simpleName);
         }
-      }
-    } else {
-      if (dartType.element == null) {
-        err('element is null !');
-      } else if (dartType.element?.collectionAnnotation == null) {
-        err('collection is null !');
-      } else {
-        err('converters is null !');
       }
     }
 
