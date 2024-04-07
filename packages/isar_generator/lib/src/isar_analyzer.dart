@@ -496,9 +496,10 @@ class IsarAnalyzer {
     final converters = classElement.collectionAnnotation?.converters ?? classElement.embeddedAnnotation?.converters;
 
     if (converters != null) {
-      for (final converterType in converters) {
-        final mirror = reflectType(converterType, [fieldDartType.runtimeType]);
+      for (final converter in converters) {
+        final mirror = reflectType(converter.runtimeType, [fieldDartType.runtimeType]);
         if (mirror.hasReflectedType) {
+          err('converters is there');
           return MirrorSystem.getName(mirror.simpleName);
         }
       }
@@ -507,7 +508,5 @@ class IsarAnalyzer {
     } else {
       err('converters is null');
     }
-
-    return null;
   }
 }
