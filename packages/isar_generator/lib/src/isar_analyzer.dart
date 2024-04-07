@@ -502,6 +502,8 @@ class IsarAnalyzer {
           return MirrorSystem.getName(mirror.simpleName);
         }
       }
+    } else {
+      err('converters is null !');
     }
 
     return null;
