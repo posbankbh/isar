@@ -7,7 +7,6 @@ import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dartx/dartx.dart';
 import 'package:isar/isar.dart';
-import 'package:isar_generator/src/config.dart';
 
 import 'package:isar_generator/src/helper.dart';
 import 'package:isar_generator/src/isar_type.dart';
@@ -496,8 +495,8 @@ class IsarAnalyzer {
     final converters = dartType.element?.collectionAnnotation?.converters ?? dartType.element?.embeddedAnnotation?.converters;
 
     if (converters != null) {
-      for (final converter in converters) {
-        final mirror = reflectType(converter.runtimeType, [dartType.runtimeType]);
+      for (final converterType in converters) {
+        final mirror = reflectType(converterType, [dartType.runtimeType]);
         if (mirror.hasReflectedType) {
           return MirrorSystem.getName(mirror.simpleName);
         }
