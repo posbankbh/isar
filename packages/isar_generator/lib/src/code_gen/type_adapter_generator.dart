@@ -363,17 +363,29 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
 
   switch (property.isarType) {
     case IsarType.bool:
-      return 'reader.readBool$orNull($propertyOffset)';
+      if (property.converter != null) {
+        return '${property.converter!.name}().read(reader.readBool$orNull($propertyOffset))';
+      } else {
+        return 'reader.readBool$orNull($propertyOffset)';
+      }
     case IsarType.byte:
       return 'reader.readByte$orNull($propertyOffset)';
     case IsarType.int:
-      return 'reader.readInt$orNull($propertyOffset)';
+      if (property.converter != null) {
+        return '${property.converter!.name}().read(reader.readInt$orNull($propertyOffset))';
+      } else {
+        return 'reader.readInt$orNull($propertyOffset)';
+      }
     case IsarType.float:
       return 'reader.readFloat$orNull($propertyOffset)';
     case IsarType.long:
       return 'reader.readLong$orNull($propertyOffset)';
     case IsarType.double:
-      return 'reader.readDouble$orNull($propertyOffset)';
+      if (property.converter != null) {
+        return '${property.converter!.name}().read(reader.readDouble$orNull($propertyOffset))';
+      } else {
+        return 'reader.readDouble$orNull($propertyOffset)';
+      }
     case IsarType.dateTime:
       return 'reader.readDateTime$orNull($propertyOffset)';
     case IsarType.string:
@@ -392,21 +404,37 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
           allOffsets,
         )''';
     case IsarType.boolList:
-      return 'reader.readBool${orElNull}List($propertyOffset)';
+      if (property.converter != null) {
+        return 'reader.readBool${orElNull}List($propertyOffset)?.map((e) => ${property.converter!.name}().read(e))';
+      } else {
+        return 'reader.readBool${orElNull}List($propertyOffset)';
+      }
     case IsarType.byteList:
       return 'reader.readByteList($propertyOffset)';
     case IsarType.intList:
-      return 'reader.readInt${orElNull}List($propertyOffset)';
+      if (property.converter != null) {
+        return 'reader.readInt${orElNull}List($propertyOffset)?.map((e) => ${property.converter!.name}().read(e))';
+      } else {
+        return 'reader.readInt${orElNull}List($propertyOffset)';
+      }
     case IsarType.floatList:
       return 'reader.readFloat${orElNull}List($propertyOffset)';
     case IsarType.longList:
       return 'reader.readLong${orElNull}List($propertyOffset)';
     case IsarType.doubleList:
-      return 'reader.readDouble${orElNull}List($propertyOffset)';
+      if (property.converter != null) {
+        return 'reader.readDouble${orElNull}List($propertyOffset)?.map((e) => ${property.converter!.name}().read(e))';
+      } else {
+        return 'reader.readDouble${orElNull}List($propertyOffset)';
+      }
     case IsarType.dateTimeList:
       return 'reader.readDateTime${orElNull}List($propertyOffset)';
     case IsarType.stringList:
-      return 'reader.readString${orElNull}List($propertyOffset)';
+      if (property.converter != null) {
+        return 'reader.readString${orElNull}List($propertyOffset)?.map((e) => ${property.converter!.name}().read(e))';
+      } else {
+        return 'reader.readString${orElNull}List($propertyOffset)';
+      }
     case IsarType.objectList:
       if (property.elementNullable) {
         return '''

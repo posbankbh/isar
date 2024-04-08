@@ -24,14 +24,14 @@ abstract class StringTypeConverter<T extends Object> implements Converter {
 
 abstract class DoubleTypeConverter<T extends Object> implements Converter {
   @override
-  Double? write(covariant T? obj);
+  double? write(covariant T? obj);
   @override
-  T? read(covariant Double? dbValue);
+  T? read(covariant double? dbValue);
 }
 
 abstract class BoolTypeConverter<T extends Object> implements Converter {
   @override
-  Bool? write(covariant T? obj);
+  bool? write(covariant T? obj);
   @override
-  T? read(covariant Bool? dbValue);
+  T? read(covariant bool? dbValue);
 }

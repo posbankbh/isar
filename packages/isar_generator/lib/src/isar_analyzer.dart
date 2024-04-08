@@ -267,9 +267,13 @@ class IsarAnalyzer {
         converter = _checkConverters(dartType, modelClass);
         if (converter != null) {
           if (converter.converterType == 'IntTypeConverter') {
-            isarType = IsarType.int;
+            isarType = dartType.isDartCoreList ? IsarType.intList : IsarType.int;
           } else if (converter.converterType == 'StringTypeConverter') {
-            isarType = IsarType.string;
+            isarType = dartType.isDartCoreList ? IsarType.stringList : IsarType.string;
+          } else if (converter.converterType == 'DoubleTypeConverter') {
+            isarType = dartType.isDartCoreList ? IsarType.doubleList : IsarType.double;
+          } else if (converter.converterType == 'BoolTypeConverter') {
+            isarType = dartType.isDartCoreList ? IsarType.boolList : IsarType.bool;
           } else {
             throw InvalidGenerationSourceError('Non implemented');
           }
@@ -497,10 +501,9 @@ class IsarAnalyzer {
       for (final converter in converters) {
         final classElement = converter.element! as ClassElement;
         final type = classElement.interfaces[0].typeArguments[0];
-        if (type.element == fieldDartType.element) {
+        if (type.element == fieldDartType.element || fieldDartType.scalarType.element == fieldDartType.element) {
           return ConverterMetaData(classElement.name, classElement.interfaces[0].element.name);
         }
-        err(type.getDisplayString(withNullability: false) + ',' + fieldDartType.getDisplayString(withNullability: false));
       }
     }
 
