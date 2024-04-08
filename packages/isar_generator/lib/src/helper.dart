@@ -134,8 +134,15 @@ extension ElementX on Element {
       inheritance: ann.getField('inheritance')!.toBoolValue()!,
       accessor: ann.getField('accessor')!.toStringValue(),
       ignore: ann.getField('ignore')!.toSetValue()!.map((e) => e.toStringValue()!).toSet(),
-      converters: ann.getField('converters')?.toListValue()?.map((e) => throw Exception(e.toString())).toList(),
     );
+  }
+
+  List<DartType>? get isarConverters {
+    final ann = _collectionChecker.firstAnnotationOfExact(nonSynthetic);
+    if (ann == null) {
+      return null;
+    }
+    return ann.getField('converters')?.toListValue()?.map((e) => e.toTypeValue()!).toList();
   }
 
   String get collectionAccessor {

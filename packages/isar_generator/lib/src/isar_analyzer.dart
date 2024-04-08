@@ -493,20 +493,14 @@ class IsarAnalyzer {
   }
 
   String? _checkConverters(DartType fieldDartType, ClassElement classElement) {
-    final converters = classElement.collectionAnnotation?.converters ?? classElement.embeddedAnnotation?.converters;
+    final converters = classElement.isarConverters;
 
     if (converters != null) {
       for (final converter in converters) {
-        var mirror = reflectClass(converter);
-        final instance = mirror.newInstance(Symbol.empty, []);
-        mirror = instance.type;
-        err(mirror.superinterfaces[0].originalDeclaration.typeArguments.length.toString() +
-            ',' +
-            mirror.superinterfaces[0].typeVariables.length.toString() +
-            ',' +
-            mirror.superinterfaces[0].originalDeclaration.typeVariables.length.toString() +
-            ',' +
-            mirror.superinterfaces[0].typeArguments.length.toString());
+        if (converter is ParameterizedType) {
+          // Get the list of type arguments
+          err(converter.typeArguments.map((e) => e.toString()).joinToString());
+        }
       }
 
       err('converters is empty');
