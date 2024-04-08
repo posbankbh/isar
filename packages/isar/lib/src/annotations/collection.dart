@@ -11,7 +11,7 @@ class Collection {
     this.inheritance = true,
     this.accessor,
     this.ignore = const {},
-    this.converters = const {},
+    this.converters,
   });
 
   /// Should properties and accessors of parent classes and mixins be included?
@@ -34,5 +34,5 @@ class Collection {
   final Set<String> ignore;
 
   /// A list of converters
-  final Set<Converter> converters;
+  final List<Converter>? converters;
 }

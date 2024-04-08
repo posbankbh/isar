@@ -495,8 +495,9 @@ class IsarAnalyzer {
   String? _checkConverters(DartType fieldDartType, ClassElement classElement) {
     final converters = classElement.collectionAnnotation?.converters ?? classElement.embeddedAnnotation?.converters;
 
+    err(converters?.length.toString() ?? 'null');
+
     if (converters != null) {
-      err(classElement.toString());
       for (final converter in converters) {
         final mirror = reflectType(converter.runtimeType, [fieldDartType.runtimeType]);
         err(converter.runtimeType.toString());
