@@ -498,7 +498,7 @@ class IsarAnalyzer {
     if (converters != null) {
       for (final converter in converters) {
         final mirror = reflectClass(converter);
-        err(mirror.superinterfaces[0].toString());
+        err(mirror.superinterfaces[0].typeArguments.length.toString() + ',' + mirror.typeVariables.length.toString());
       }
 
       err('converters is empty');
