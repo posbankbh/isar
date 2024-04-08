@@ -1,7 +1,5 @@
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'dart:mirrors';
-
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
@@ -184,7 +182,7 @@ class IsarAnalyzer {
     Map<String, dynamic>? enumMap;
     String? enumPropertyName;
     String? defaultEnumElement;
-    String? converter;
+    ConverterMetaData? converter;
 
     late final IsarType isarType;
     if (scalarDartType.element is EnumElement) {
@@ -268,9 +266,9 @@ class IsarAnalyzer {
         //check if we have converter for this field type
         converter = _checkConverters(dartType, modelClass);
         if (converter != null) {
-          if (converter == 'IntTypeConverter') {
+          if (converter.converterType == 'IntTypeConverter') {
             isarType = IsarType.int;
-          } else if (converter == 'StringTypeConverter') {
+          } else if (converter.converterType == 'StringTypeConverter') {
             isarType = IsarType.string;
           } else {
             throw InvalidGenerationSourceError('Non implemented');
@@ -492,20 +490,19 @@ class IsarAnalyzer {
     }
   }
 
-  String? _checkConverters(DartType fieldDartType, ClassElement classElement) {
+  ConverterMetaData? _checkConverters(DartType fieldDartType, ClassElement classElement) {
     final converters = classElement.isarConverters;
 
     if (converters != null) {
       for (final converter in converters) {
-        if (converter is ParameterizedType) {
-          // Get the list of type arguments
-          err(converter.typeArguments.map((e) => e.toString()).joinToString());
+        final classElement = converter.element! as ClassElement;
+        final type = classElement.interfaces[0].typeArguments[0];
+        if (type == fieldDartType) {
+          return ConverterMetaData(classElement.name, classElement.interfaces[0].element.name);
         }
       }
-
-      err('converters is empty');
-    } else {
-      err('converters is null');
     }
+
+    return null;
   }
 }

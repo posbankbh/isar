@@ -172,13 +172,15 @@ String generateSerialize(ObjectInfo object) {
 
     switch (property.isarType) {
       case IsarType.bool:
-        code += 'writer.writeBool(offsets[$i], ${property.converter == null ? value : '${property.converter}().write($value)'});';
+        code +=
+            'writer.writeBool(offsets[$i], ${property.converter?.name == null ? value : '${property.converter!.name}().write($value)'});';
         break;
       case IsarType.byte:
         code += 'writer.writeByte(offsets[$i], $value);';
         break;
       case IsarType.int:
-        code += 'writer.writeInt(offsets[$i], ${property.converter == null ? value : '${property.converter}().write($value)'});';
+        code +=
+            'writer.writeInt(offsets[$i], ${property.converter?.name == null ? value : '${property.converter!.name}().write($value)'});';
         break;
       case IsarType.float:
         code += 'writer.writeFloat(offsets[$i], $value);';
@@ -187,7 +189,8 @@ String generateSerialize(ObjectInfo object) {
         code += 'writer.writeLong(offsets[$i], $value);';
         break;
       case IsarType.double:
-        code += 'writer.writeDouble(offsets[$i], ${property.converter == null ? value : '${property.converter}().write($value)'});';
+        code +=
+            'writer.writeDouble(offsets[$i], ${property.converter?.name == null ? value : '${property.converter!.name}().write($value)'});';
         break;
       case IsarType.dateTime:
         code += 'writer.writeDateTime(offsets[$i], $value);';
@@ -198,7 +201,8 @@ String generateSerialize(ObjectInfo object) {
           code += 'writer.writeString(offsets[$i], $value == null ? null : jsonEncode($value));';
           code += "} catch (_) { throw Exception('Field (${property.dartName}) must support json seriallization'); }";
         } else {
-          code += 'writer.writeString(offsets[$i], ${property.converter == null ? value : '${property.converter}().write($value)'});';
+          code +=
+              'writer.writeString(offsets[$i], ${property.converter?.name == null ? value : '${property.converter!.name}().write($value)'});';
         }
         break;
       case IsarType.object:
@@ -376,7 +380,7 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
       if (property.isMap) {
         return '_decodeMap<${property.mapKeyType}, ${property.mapValueType}>(reader.readString$orNull($propertyOffset))';
       } else if (property.converter != null) {
-        return '${property.converter}().read(reader.readString$orNull($propertyOffset))';
+        return '${property.converter!.name}().read(reader.readString$orNull($propertyOffset))';
       } else {
         return 'reader.readString$orNull($propertyOffset)';
       }

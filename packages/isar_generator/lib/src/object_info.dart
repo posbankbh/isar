@@ -98,7 +98,7 @@ class ObjectProperty {
   final String? mapKeyType;
   final String? mapValueType;
   final bool isDynamic;
-  final String? converter;
+  final ConverterMetaData? converter;
 
   bool get isEnum => enumMap != null;
 
@@ -212,4 +212,10 @@ class ObjectLink {
     final name = targetLinkIsarName ?? isarName;
     return xxh3(utf8.encode(name) as Uint8List, seed: colId);
   }
+}
+
+class ConverterMetaData {
+  ConverterMetaData(this.name, this.converterType);
+  String name;
+  String converterType;
 }

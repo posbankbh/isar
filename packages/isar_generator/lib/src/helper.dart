@@ -142,11 +142,7 @@ extension ElementX on Element {
     if (ann == null) {
       return null;
     }
-    return ann
-        .getField('converters')
-        ?.toListValue()
-        ?.map((e) => throw Exception(e.toTypeValue()!.getDisplayString(withNullability: false)))
-        .toList();
+    return ann.getField('converters')?.toListValue()?.map((e) => e.toTypeValue()!).toList();
   }
 
   String get collectionAccessor {
