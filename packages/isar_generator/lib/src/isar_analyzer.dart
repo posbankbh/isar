@@ -504,7 +504,7 @@ class IsarAnalyzer {
             ',' +
             mirror.superinterfaces[0].originalDeclaration.typeVariables.length.toString() +
             ',' +
-            mirror.superinterfaces.length.toString());
+            mirror.superinterfaces[0].typeArguments.length.toString());
       }
 
       err('converters is empty');
