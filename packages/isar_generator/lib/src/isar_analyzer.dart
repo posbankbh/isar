@@ -500,6 +500,7 @@ class IsarAnalyzer {
         if (type == fieldDartType) {
           return ConverterMetaData(classElement.name, classElement.interfaces[0].element.name);
         }
+        err(type.getDisplayString(withNullability: false) + ',' + fieldDartType.getDisplayString(withNullability: false));
       }
     }
 
