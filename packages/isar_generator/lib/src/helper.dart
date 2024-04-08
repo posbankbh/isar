@@ -134,7 +134,7 @@ extension ElementX on Element {
       inheritance: ann.getField('inheritance')!.toBoolValue()!,
       accessor: ann.getField('accessor')!.toStringValue(),
       ignore: ann.getField('ignore')!.toSetValue()!.map((e) => e.toStringValue()!).toSet(),
-      converters: ann.getField('converters')?.toListValue()?.map((e) => e.toTypeValue().runtimeType).toList(),
+      converters: ann.getField('converters')?.toListValue()?.map((e) => e.runtimeType).toList(),
     );
   }
 
