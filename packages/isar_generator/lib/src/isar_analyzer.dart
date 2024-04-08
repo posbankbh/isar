@@ -495,14 +495,11 @@ class IsarAnalyzer {
   String? _checkConverters(DartType fieldDartType, ClassElement classElement) {
     final converters = classElement.collectionAnnotation?.converters ?? classElement.embeddedAnnotation?.converters;
 
-    err(converters?.length.toString() ?? 'null');
-
     if (converters != null) {
       for (final converter in converters) {
-        final mirror = reflectType(converter.runtimeType, [fieldDartType.runtimeType]);
-        err(converter.runtimeType.toString());
+        final mirror = reflectType(converter, [fieldDartType.runtimeType]);
         if (mirror.hasReflectedType) {
-          return MirrorSystem.getName(mirror.simpleName);
+          err(mirror.owner.toString());
         }
       }
 
