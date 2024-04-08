@@ -501,7 +501,7 @@ class IsarAnalyzer {
       for (final converter in converters) {
         final classElement = converter.element! as ClassElement;
         final type = classElement.interfaces[0].typeArguments[0];
-        if (type.element == fieldDartType.element || fieldDartType.scalarType.element == fieldDartType.element) {
+        if (type.element == fieldDartType.element || fieldDartType.scalarType.element == type.element) {
           return ConverterMetaData(classElement.name, classElement.interfaces[0].element.name);
         }
       }
