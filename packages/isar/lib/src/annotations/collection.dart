@@ -34,5 +34,5 @@ class Collection {
   final Set<String> ignore;
 
   /// A list of converters
-  final List<Converter>? converters;
+  final List<Type>? converters;
 }

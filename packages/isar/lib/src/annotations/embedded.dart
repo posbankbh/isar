@@ -18,5 +18,5 @@ class Embedded {
   final Set<String> ignore;
 
   /// A list of type converters
-  final List<Converter>? converters;
+  final List<Type>? converters;
 }

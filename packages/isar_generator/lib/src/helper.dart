@@ -15,25 +15,20 @@ const TypeChecker _nameChecker = TypeChecker.fromRuntime(Name);
 const TypeChecker _indexChecker = TypeChecker.fromRuntime(Index);
 const TypeChecker _backlinkChecker = TypeChecker.fromRuntime(Backlink);
 
-
 extension ClassElementX on ClassElement {
   bool get hasZeroArgsConstructor {
     return constructors.any(
-      (ConstructorElement c) =>
-          c.isPublic &&
-          !c.parameters.any((ParameterElement p) => !p.isOptional),
+      (ConstructorElement c) => c.isPublic && !c.parameters.any((ParameterElement p) => !p.isOptional),
     );
   }
 
   List<PropertyInducingElement> get allAccessors {
-    final ignoreFields =
-        collectionAnnotation?.ignore ?? embeddedAnnotation!.ignore;
+    final ignoreFields = collectionAnnotation?.ignore ?? embeddedAnnotation!.ignore;
     return [
       ...accessors.mapNotNull((e) => e.variable),
       if (collectionAnnotation?.inheritance ?? embeddedAnnotation!.inheritance)
         for (InterfaceType supertype in allSupertypes) ...[
-          if (!supertype.isDartCoreObject)
-            ...supertype.accessors.mapNotNull((e) => e.variable)
+          if (!supertype.isDartCoreObject) ...supertype.accessors.mapNotNull((e) => e.variable)
         ]
     ]
         .where(
@@ -41,7 +36,7 @@ extension ClassElementX on ClassElement {
               e.isPublic &&
               !e.isStatic &&
               !_ignoreChecker.hasAnnotationOf(e.nonSynthetic) &&
-              !ignoreFields.contains(e.name) && 
+              !ignoreFields.contains(e.name) &&
               !(e.enclosingElement != null && Config.instance.classesToIgnore.contains(e.enclosingElement!.name)),
         )
         .distinctBy((e) => e.name)
@@ -87,8 +82,7 @@ extension PropertyElementX on PropertyInducingElement {
           final indexTypeField = c.getField('type')!;
           IndexType? indexType;
           if (!indexTypeField.isNull) {
-            final indexTypeIndex =
-                indexTypeField.getField('index')!.toIntValue()!;
+            final indexTypeIndex = indexTypeField.getField('index')!.toIntValue()!;
             indexType = IndexType.values[indexTypeIndex];
           }
           composite.add(
@@ -139,11 +133,8 @@ extension ElementX on Element {
     return Collection(
       inheritance: ann.getField('inheritance')!.toBoolValue()!,
       accessor: ann.getField('accessor')!.toStringValue(),
-      ignore: ann
-          .getField('ignore')!
-          .toSetValue()!
-          .map((e) => e.toStringValue()!)
-          .toSet(),
+      ignore: ann.getField('ignore')!.toSetValue()!.map((e) => e.toStringValue()!).toSet(),
+      converters: ann.getField('converters')?.toListValue()?.map((e) => e.toTypeValue().runtimeType).toList(),
     );
   }
 
@@ -168,11 +159,7 @@ extension ElementX on Element {
     }
     return Embedded(
       inheritance: ann.getField('inheritance')!.toBoolValue()!,
-      ignore: ann
-          .getField('ignore')!
-          .toSetValue()!
-          .map((e) => e.toStringValue()!)
-          .toSet(),
+      ignore: ann.getField('ignore')!.toSetValue()!.map((e) => e.toStringValue()!).toSet(),
     );
   }
 }
