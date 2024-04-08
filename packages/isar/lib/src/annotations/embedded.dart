@@ -9,7 +9,7 @@ const embedded = Embedded();
 @Target({TargetKind.classType})
 class Embedded {
   /// Annotation to nest objects of this type in collections.
-  const Embedded({this.inheritance = true, this.ignore = const {}, this.converters = const {}});
+  const Embedded({this.inheritance = true, this.ignore = const {}, this.converters});
 
   /// Should properties and accessors of parent classes and mixins be included?
   final bool inheritance;
@@ -18,5 +18,5 @@ class Embedded {
   final Set<String> ignore;
 
   /// A list of type converters
-  final Set<Converter> converters;
+  final List<Converter>? converters;
 }
