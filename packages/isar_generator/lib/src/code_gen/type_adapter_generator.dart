@@ -532,14 +532,18 @@ String generateEnumMaps(ObjectInfo object) {
 String generateMapDecoderHelper(ObjectInfo object) {
   var code = 'Map<TKey, TValue>? _decodeMap<TKey, TValue>(String? data)';
   code += '{';
+  code += ' try {';
   code += '   if (data == null) return null;';
   code += '   return (jsonDecode(data) as Map?)?.cast<TKey, TValue>();';
+  code += ' } catch (_) { }';
   code += '}';
   code += '\n';
   code += 'dynamic _decodeDynamic(String? data)';
   code += '{';
+  code += 'try {';
   code += '   if (data == null || data.isEmpty) return null;';
   code += '   return jsonDecode(data);';
+  code += ' } catch (_) { }';
   code += '}';
   return code;
 }
