@@ -538,7 +538,7 @@ String generateMapDecoderHelper(ObjectInfo object) {
   code += '\n';
   code += 'dynamic _decodeDynamic(String? data)';
   code += '{';
-  code += '   if (data == null) return null;';
+  code += '   if (data == null || data.isEmpty) return null;';
   code += '   return jsonDecode(data);';
   code += '}';
   return code;
