@@ -69,7 +69,7 @@ String generateEstimateSerialize(ObjectInfo object) {
       var bytesCount = offsets.last;''';
 
   for (final property in object.properties) {
-    final value = 'object.${property.dartName}';
+    final value = property.isDynamic || property.isMap ? 'jsonEncode(object.${property.dartName})' : 'object.${property.dartName}';
 
     switch (property.isarType) {
       case IsarType.string:
@@ -218,10 +218,12 @@ String generateSerialize(ObjectInfo object) {
         code += 'writer.writeByteList(offsets[$i], $value);';
         break;
       case IsarType.boolList:
-        code += 'writer.writeBoolList(offsets[$i], $value);';
+        code +=
+            'writer.writeBoolList(offsets[$i], ${property.converter?.name == null ? value : '${property.converter!.name}().write($value)'});';
         break;
       case IsarType.intList:
-        code += 'writer.writeIntList(offsets[$i], $value);';
+        code +=
+            'writer.writeIntList(offsets[$i], ${property.converter?.name == null ? value : '${property.converter!.name}().write($value)'});';
         break;
       case IsarType.longList:
         code += 'writer.writeLongList(offsets[$i], $value);';
@@ -230,13 +232,15 @@ String generateSerialize(ObjectInfo object) {
         code += 'writer.writeFloatList(offsets[$i], $value);';
         break;
       case IsarType.doubleList:
-        code += 'writer.writeDoubleList(offsets[$i], $value);';
+        code +=
+            'writer.writeDoubleList(offsets[$i], ${property.converter?.name == null ? value : '${property.converter!.name}().write($value)'});';
         break;
       case IsarType.dateTimeList:
         code += 'writer.writeDateTimeList(offsets[$i], $value);';
         break;
       case IsarType.stringList:
-        code += 'writer.writeStringList(offsets[$i], $value);';
+        code +=
+            'writer.writeStringList(offsets[$i], ${property.converter?.name == null ? value : '${property.converter!.name}().write($value)'});';
         break;
       case IsarType.objectList:
         code += '''
@@ -405,7 +409,7 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
         )''';
     case IsarType.boolList:
       if (property.converter != null) {
-        return 'reader.readBool${orElNull}List($propertyOffset)?.map((e) => ${property.converter!.name}().read(e))';
+        return 'reader.readBool${orElNull}List($propertyOffset)?.map((e) => ${property.converter!.name}().read(e))?.toList()';
       } else {
         return 'reader.readBool${orElNull}List($propertyOffset)';
       }
@@ -413,7 +417,7 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
       return 'reader.readByteList($propertyOffset)';
     case IsarType.intList:
       if (property.converter != null) {
-        return 'reader.readInt${orElNull}List($propertyOffset)?.map((e) => ${property.converter!.name}().read(e))';
+        return 'reader.readInt${orElNull}List($propertyOffset)?.map((e) => ${property.converter!.name}().read(e))?.toList()';
       } else {
         return 'reader.readInt${orElNull}List($propertyOffset)';
       }
@@ -423,7 +427,7 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
       return 'reader.readLong${orElNull}List($propertyOffset)';
     case IsarType.doubleList:
       if (property.converter != null) {
-        return 'reader.readDouble${orElNull}List($propertyOffset)?.map((e) => ${property.converter!.name}().read(e))';
+        return 'reader.readDouble${orElNull}List($propertyOffset)?.map((e) => ${property.converter!.name}().read(e))?.toList()';
       } else {
         return 'reader.readDouble${orElNull}List($propertyOffset)';
       }
@@ -431,7 +435,7 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
       return 'reader.readDateTime${orElNull}List($propertyOffset)';
     case IsarType.stringList:
       if (property.converter != null) {
-        return 'reader.readString${orElNull}List($propertyOffset)?.map((e) => ${property.converter!.name}().read(e))';
+        return 'reader.readString${orElNull}List($propertyOffset)?.map((e) => ${property.converter!.name}().read(e))?.toList() ';
       } else {
         return 'reader.readString${orElNull}List($propertyOffset)';
       }
