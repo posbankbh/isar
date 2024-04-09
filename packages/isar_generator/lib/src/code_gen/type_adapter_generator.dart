@@ -219,11 +219,11 @@ String generateSerialize(ObjectInfo object) {
         break;
       case IsarType.boolList:
         code +=
-            'writer.writeBoolList(offsets[$i], ${property.converter?.name == null ? value : '$value?.map((e) => ${property.converter!.name}().write(e))'});';
+            'writer.writeBoolList(offsets[$i], ${property.converter?.name == null ? value : '$value?.map((e) => ${property.converter!.name}().write(e))?.toList()'});';
         break;
       case IsarType.intList:
         code +=
-            'writer.writeIntList(offsets[$i], ${property.converter?.name == null ? value : '$value?.map((e) => ${property.converter!.name}().write(e))'});';
+            'writer.writeIntList(offsets[$i], ${property.converter?.name == null ? value : '$value?.map((e) => ${property.converter!.name}().write(e))?.toList()'});';
         break;
       case IsarType.longList:
         code += 'writer.writeLongList(offsets[$i], $value);';
@@ -233,14 +233,14 @@ String generateSerialize(ObjectInfo object) {
         break;
       case IsarType.doubleList:
         code +=
-            'writer.writeDoubleList(offsets[$i], ${property.converter?.name == null ? value : '$value?.map((e) => ${property.converter!.name}().write(e))'});';
+            'writer.writeDoubleList(offsets[$i], ${property.converter?.name == null ? value : '$value?.map((e) => ${property.converter!.name}().write(e))?.toList()'});';
         break;
       case IsarType.dateTimeList:
         code += 'writer.writeDateTimeList(offsets[$i], $value);';
         break;
       case IsarType.stringList:
         code +=
-            'writer.writeStringList(offsets[$i], ${property.converter?.name == null ? value : '$value?.map((e) => ${property.converter!.name}().write(e))'});';
+            'writer.writeStringList(offsets[$i], ${property.converter?.name == null ? value : '$value?.map((e) => ${property.converter!.name}().write(e))?.toList()'});';
         break;
       case IsarType.objectList:
         code += '''
