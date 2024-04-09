@@ -395,6 +395,8 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
     case IsarType.string:
       if (property.isMap) {
         return '_decodeMap<${property.mapKeyType}, ${property.mapValueType}>(reader.readString$orNull($propertyOffset))';
+      } else if (property.isDynamic) {
+        return '_decodeDynamic(reader.readString$orNull($propertyOffset))';
       } else if (property.converter != null) {
         return '${property.converter!.name}().read(reader.readString$orNull($propertyOffset))${orNull == '' ? '!' : ''}';
       } else {
