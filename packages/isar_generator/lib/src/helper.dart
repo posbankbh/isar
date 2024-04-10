@@ -138,7 +138,8 @@ extension ElementX on Element {
   }
 
   List<DartType>? get isarConverters {
-    final ann = _collectionChecker.firstAnnotationOfExact(nonSynthetic);
+    var ann = _collectionChecker.firstAnnotationOfExact(nonSynthetic);
+    ann ??= _embeddedChecker.firstAnnotationOfExact(nonSynthetic);
     if (ann == null) {
       return null;
     }
