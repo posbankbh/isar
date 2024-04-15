@@ -384,7 +384,11 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
     case IsarType.float:
       return 'reader.readFloat$orNull($propertyOffset)';
     case IsarType.long:
-      return 'reader.readLong$orNull($propertyOffset)';
+      if (property.converter != null) {
+        return '${property.converter!.name}().read(reader.readLong$orNull($propertyOffset))${orNull == '' ? '!' : ''}';
+      } else {
+        return 'reader.readLong$orNull($propertyOffset)';
+      }
     case IsarType.double:
       if (property.converter != null) {
         return '${property.converter!.name}().read(reader.readDouble$orNull($propertyOffset))${orNull == '' ? '!' : ''}';
