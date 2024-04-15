@@ -394,9 +394,9 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
       return 'reader.readDateTime$orNull($propertyOffset)';
     case IsarType.string:
       if (property.isMap) {
-        return '_decodeMap<${property.mapKeyType}, ${property.mapValueType}>(reader.readString$orNull($propertyOffset))';
+        return 'decodeMap<${property.mapKeyType}, ${property.mapValueType}>(reader.readString$orNull($propertyOffset))';
       } else if (property.isDynamic) {
-        return '_decodeDynamic(reader.readString$orNull($propertyOffset))';
+        return 'decodeDynamic(reader.readString$orNull($propertyOffset))';
       } else if (property.converter != null) {
         return '${property.converter!.name}().read(reader.readString$orNull($propertyOffset))${orNull == '' ? '!' : ''}';
       } else {
@@ -526,24 +526,5 @@ String generateEnumMaps(ObjectInfo object) {
     }
   }
 
-  return code;
-}
-
-String generateMapDecoderHelper(ObjectInfo object) {
-  var code = 'Map<TKey, TValue>? _decodeMap<TKey, TValue>(String? data)';
-  code += '{';
-  code += ' try {';
-  code += '   if (data == null) return null;';
-  code += '   return (jsonDecode(data) as Map?)?.cast<TKey, TValue>();';
-  code += ' } catch (_) { }';
-  code += '}';
-  code += '\n';
-  code += 'dynamic _decodeDynamic(String? data)';
-  code += '{';
-  code += 'try {';
-  code += '   if (data == null || data.isEmpty) return null;';
-  code += '   return jsonDecode(data);';
-  code += ' } catch (_) { }';
-  code += '}';
   return code;
 }

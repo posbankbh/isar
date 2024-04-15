@@ -17,6 +17,7 @@ import 'package:meta/meta_meta.dart';
 export 'dart:convert';
 
 part 'src/converter/type_converter.dart';
+part 'src/builder_helper_functions.dart';
 part 'src/annotations/backlink.dart';
 part 'src/annotations/collection.dart';
 part 'src/annotations/embedded.dart';

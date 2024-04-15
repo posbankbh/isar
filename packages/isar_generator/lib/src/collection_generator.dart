@@ -38,7 +38,7 @@ const ignoreLints = [
 ];
 
 class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
-  IsarCollectionGenerator(){
+  IsarCollectionGenerator() {
     Config.readFromPubspec();
   }
 
@@ -65,7 +65,6 @@ class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
       ${generateDeserializeProp(object)}
 
       ${generateEnumMaps(object)}
-      ${generateMapDecoderHelper(object)}
 
       ${generateGetId(object)}
       ${generateGetLinks(object)}
@@ -84,7 +83,7 @@ class IsarCollectionGenerator extends GeneratorForAnnotation<Collection> {
 }
 
 class IsarEmbeddedGenerator extends GeneratorForAnnotation<Embedded> {
-  IsarEmbeddedGenerator(){
+  IsarEmbeddedGenerator() {
     Config.readFromPubspec();
   }
 
@@ -105,7 +104,6 @@ class IsarEmbeddedGenerator extends GeneratorForAnnotation<Embedded> {
       ${generateSerialize(object)}
       ${generateDeserialize(object)}
       ${generateDeserializeProp(object)}
-      ${generateMapDecoderHelper(object)}
 
 
       ${generateEnumMaps(object)}
