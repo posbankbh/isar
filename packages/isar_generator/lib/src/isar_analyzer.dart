@@ -269,7 +269,7 @@ class IsarAnalyzer {
         converter = _checkConverters(dartType, modelClass);
         if (converter != null) {
           if (converter.converterType == 'IntTypeConverter') {
-            isarType = dartType.isDartCoreList ? IsarType.intList : IsarType.int;
+            isarType = dartType.isDartCoreList ? IsarType.longList : IsarType.long;
           } else if (converter.converterType == 'StringTypeConverter') {
             isarType = dartType.isDartCoreList ? IsarType.stringList : IsarType.string;
           } else if (converter.converterType == 'DoubleTypeConverter') {

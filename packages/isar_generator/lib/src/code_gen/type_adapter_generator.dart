@@ -186,7 +186,8 @@ String generateSerialize(ObjectInfo object) {
         code += 'writer.writeFloat(offsets[$i], $value);';
         break;
       case IsarType.long:
-        code += 'writer.writeLong(offsets[$i], $value);';
+        code +=
+            'writer.writeLong(offsets[$i], ${property.converter?.name == null ? value : '${property.converter!.name}().write($value)'});';
         break;
       case IsarType.double:
         code +=
