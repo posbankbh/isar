@@ -419,7 +419,7 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
             ? ', converter: (key, value) => MapEntry(${isKeyEnum ? '$keyTypeName.values.firstWhere((e) => e.name == key)' : 'key'}, ${isKeyEnum ? '$keyTypeName.values.firstWhere((e) => e.name == value)' : 'value'}))'
             : '';
 
-        return 'decodeMap<$keyTypeName, $valueTypeName}>(reader.readString$orNull($propertyOffset), $converterCode)';
+        return 'decodeMap<$keyTypeName, $valueTypeName}>(reader.readString$orNull($propertyOffset)$converterCode)';
       } else if (property.isDynamic) {
         return 'decodeDynamic(reader.readString$orNull($propertyOffset))';
       } else if (property.converter != null) {
