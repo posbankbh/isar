@@ -415,9 +415,9 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
         final keyTypeName = property.mapKeyType!.getDisplayString(withNullability: false);
         final valueTypeName = property.mapValueType!.getDisplayString(withNullability: false);
         final isKeyEnum = property.mapKeyType!.element is EnumElement;
-        final isValueEnum = property.mapValueType! is EnumElement;
+        final isValueEnum = property.mapValueType!.element is EnumElement;
         final converterCode = isKeyEnum || isValueEnum
-            ? ', converter: (key, value) => MapEntry(${isKeyEnum ? '$keyTypeName.values.firstWhere((e) => e.name == key)' : 'key'}, ${isKeyEnum ? '$keyTypeName.values.firstWhere((e) => e.name == value)' : 'value'})'
+            ? ', converter: (key, value) => MapEntry(${isKeyEnum ? '$keyTypeName.values.firstWhere((e) => e.name == key)' : 'key'}, ${isValueEnum ? '$valueTypeName.values.firstWhere((e) => e.name == value)' : 'value'})'
             : '';
 
         return 'decodeMap<$keyTypeName, $valueTypeName>(reader.readString$orNull($propertyOffset)$converterCode)';
