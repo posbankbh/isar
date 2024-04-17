@@ -73,7 +73,7 @@ String generateEstimateSerialize(ObjectInfo object) {
     if (property.isDynamic) {
       value = 'jsonEncode(object.${property.dartName})';
     } else if (property.isMap) {
-      value = 'jsonEncode(object.${property.dartName}, toEncodable: (n) => nonEncodable is Map ? convertMapEnumToString(n) : null)';
+      value = 'jsonEncode(object.${property.dartName}, toEncodable: (n) => n is Map ? convertMapEnumToString(n) : null)';
     } else {
       value = 'object.${property.dartName}';
     }
