@@ -415,9 +415,9 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
         final valueTypeName = property.mapValueType!.getDisplayString(withNullability: false);
         final isKeyEnum = property.mapKeyType!.isDartCoreEnum;
         final isValueEnum = property.mapValueType!.isDartCoreEnum;
-        final converterCode = isKeyEnum || isValueEnum
-            ? ', converter: (key, value) => MapEntry(${isKeyEnum ? '$keyTypeName.values.firstWhere((e) => e.name == key)' : 'key'}, ${isKeyEnum ? '$keyTypeName.values.firstWhere((e) => e.name == value)' : 'value'})'
-            : '';
+        final converterCode = '';
+        // ? ', converter: (key, value) => MapEntry(${isKeyEnum ? '$keyTypeName.values.firstWhere((e) => e.name == key)' : 'key'}, ${isKeyEnum ? '$keyTypeName.values.firstWhere((e) => e.name == value)' : 'value'})'
+        // : '';
 
         return 'decodeMap<$keyTypeName, $valueTypeName}>(reader.readString$orNull($propertyOffset)$converterCode)';
       } else if (property.isDynamic) {
