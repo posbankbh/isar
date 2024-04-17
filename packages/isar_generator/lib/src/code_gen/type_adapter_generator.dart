@@ -69,7 +69,9 @@ String generateEstimateSerialize(ObjectInfo object) {
       var bytesCount = offsets.last;''';
 
   for (final property in object.properties) {
-    final value = property.isDynamic || property.isMap ? 'jsonEncode(object.${property.dartName})' : 'object.${property.dartName}';
+    final value = property.isDynamic || property.isMap
+        ? 'jsonEncode(object.${property.dartName}, toEncodable: (nonEncodable) => nonEncodable is Map ? convertMapEnumToString(nonEncodable) : null)'
+        : 'object.${property.dartName}';
 
     switch (property.isarType) {
       case IsarType.string:
@@ -199,7 +201,8 @@ String generateSerialize(ObjectInfo object) {
       case IsarType.string:
         if (property.isMap || property.isDynamic) {
           code += 'try {';
-          code += 'writer.writeString(offsets[$i], $value == null ? null : jsonEncode($value));';
+          code +=
+              'writer.writeString(offsets[$i], $value == null ? null : jsonEncode($value, toEncodable: (nonEncodable) => nonEncodable is Map ? convertMapEnumToString(nonEncodable) : null));';
           code += "} catch (_) { throw Exception('Field (${property.dartName}) must support json seriallization'); }";
         } else {
           code +=
@@ -399,7 +402,15 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
       return 'reader.readDateTime$orNull($propertyOffset)';
     case IsarType.string:
       if (property.isMap) {
-        return 'decodeMap<${property.mapKeyType}, ${property.mapValueType}>(reader.readString$orNull($propertyOffset))';
+        final keyTypeName = property.mapKeyType!.getDisplayString(withNullability: false);
+        final valueTypeName = property.mapValueType!.getDisplayString(withNullability: false);
+        final isKeyEnum = property.mapKeyType!.isDartCoreEnum;
+        final isValueEnum = property.mapValueType!.isDartCoreEnum;
+        final converterCode = isKeyEnum || isValueEnum
+            ? ', converter: (key, value) => MapEntry(${isKeyEnum ? '$keyTypeName.values.firstWhere((e) => e.name == key)' : 'key'}, ${isKeyEnum ? '$keyTypeName.values.firstWhere((e) => e.name == value)' : 'value'}))'
+            : '';
+
+        return 'decodeMap<$keyTypeName, $valueTypeName}>(reader.readString$orNull($propertyOffset), $isKeyEnum, $isValueEnum$converterCode)';
       } else if (property.isDynamic) {
         return 'decodeDynamic(reader.readString$orNull($propertyOffset))';
       } else if (property.converter != null) {

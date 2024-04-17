@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:analyzer/dart/element/type.dart';
 import 'package:dartx/dartx.dart';
 import 'package:isar/isar.dart';
 
@@ -70,8 +71,8 @@ class ObjectProperty {
     required this.assignable,
     this.constructorPosition,
     this.isMap = false,
-    this.mapKeyType,
     this.mapValueType,
+    this.mapKeyType,
     this.isDynamic = false,
     this.converter,
   });
@@ -95,8 +96,8 @@ class ObjectProperty {
   final bool assignable;
   final int? constructorPosition;
   final bool isMap;
-  final String? mapKeyType;
-  final String? mapValueType;
+  final DartType? mapKeyType;
+  final DartType? mapValueType;
   final bool isDynamic;
   final ConverterMetaData? converter;
 

@@ -312,12 +312,13 @@ class IsarAnalyzer {
       deserialize = property.setter == null ? PropertyDeser.none : PropertyDeser.assign;
     }
 
-    String? mapKeyType;
-    String? mapValueType;
+    DartType? mapKeyType;
+    DartType? mapValueType;
+
     if (dartType.isDartCoreMap) {
       final mapElement = dartType as ParameterizedType;
-      mapKeyType = mapElement.typeArguments[0].getDisplayString(withNullability: true);
-      mapValueType = mapElement.typeArguments[1].getDisplayString(withNullability: true);
+      mapKeyType = mapElement.typeArguments[0];
+      mapValueType = mapElement.typeArguments[1];
     }
 
     return ObjectProperty(
