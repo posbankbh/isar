@@ -2,9 +2,9 @@
 part of isar;
 
 Map<TKey, TValue>? decodeMap<TKey, TValue>(
-  String? data,
+  String? data, {
   MapEntry<TKey, TValue> Function(dynamic, dynamic)? converter,
-) {
+}) {
   try {
     if (data == null) return null;
 
