@@ -69,9 +69,14 @@ String generateEstimateSerialize(ObjectInfo object) {
       var bytesCount = offsets.last;''';
 
   for (final property in object.properties) {
-    final value = property.isDynamic || property.isMap
-        ? 'jsonEncode(object.${property.dartName}, toEncodable: (nonEncodable) => nonEncodable is Map ? convertMapEnumToString(nonEncodable) : null)'
-        : 'object.${property.dartName}';
+    var value = '';
+    if (property.isDynamic) {
+      value = 'jsonEncode(object.${property.dartName})';
+    } else if (property.isMap) {
+      value = 'jsonEncode(object.${property.dartName}, toEncodable: (n) => nonEncodable is Map ? convertMapEnumToString(n) : null)';
+    } else {
+      value = 'object.${property.dartName}';
+    }
 
     switch (property.isarType) {
       case IsarType.string:
@@ -199,10 +204,14 @@ String generateSerialize(ObjectInfo object) {
         code += 'writer.writeDateTime(offsets[$i], $value);';
         break;
       case IsarType.string:
-        if (property.isMap || property.isDynamic) {
+        if (property.isDynamic) {
+          code += 'try {';
+          code += 'writer.writeString(offsets[$i], $value == null ? null : jsonEncode($value));';
+          code += "} catch (_) { throw Exception('Field (${property.dartName}) must support json seriallization'); }";
+        } else if (property.isMap) {
           code += 'try {';
           code +=
-              'writer.writeString(offsets[$i], $value == null ? null : jsonEncode($value, toEncodable: (nonEncodable) => nonEncodable is Map ? convertMapEnumToString(nonEncodable) : null));';
+              'writer.writeString(offsets[$i], $value == null ? null : jsonEncode($value, toEncodable: (n) => convertMapEnumToString(n as Map)));';
           code += "} catch (_) { throw Exception('Field (${property.dartName}) must support json seriallization'); }";
         } else {
           code +=
