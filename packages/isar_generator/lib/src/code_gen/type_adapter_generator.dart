@@ -1,5 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'package:analyzer/dart/element/element.dart';
 import 'package:dartx/dartx.dart';
 import 'package:isar/isar.dart';
 import 'package:isar_generator/src/object_info.dart';
@@ -413,8 +414,8 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
       if (property.isMap) {
         final keyTypeName = property.mapKeyType!.getDisplayString(withNullability: false);
         final valueTypeName = property.mapValueType!.getDisplayString(withNullability: false);
-        final isKeyEnum = property.mapKeyType!.isDartCoreEnum;
-        final isValueEnum = property.mapValueType!.isDartCoreEnum;
+        final isKeyEnum = property.mapKeyType!.element is EnumElement;
+        final isValueEnum = property.mapValueType! is EnumElement;
         final converterCode = isKeyEnum || isValueEnum
             ? ', converter: (key, value) => MapEntry(${isKeyEnum ? '$keyTypeName.values.firstWhere((e) => e.name == key)' : 'key'}, ${isKeyEnum ? '$keyTypeName.values.firstWhere((e) => e.name == value)' : 'value'})'
             : '';
