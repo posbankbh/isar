@@ -29,8 +29,8 @@ extension ClassElementX on ClassElement {
     final ignoreFields = collectionAnnotation?.ignore ?? embeddedAnnotation!.ignore;
 
     bool checkCanInclude(PropertyAccessorElement e) {
-      if (!Config.instance.includeOnlyFields) return true;
-      if (_includeChecker.hasAnnotationOf(e.nonSynthetic)) return true;
+      //if (!Config.instance.includeOnlyFields) return true;
+      //if (_includeChecker.hasAnnotationOf(e.nonSynthetic)) return true;
       return !isSynthetic;
     }
 
