@@ -16,6 +16,7 @@ const TypeChecker _ignoreChecker = TypeChecker.fromRuntime(Ignore);
 const TypeChecker _nameChecker = TypeChecker.fromRuntime(Name);
 const TypeChecker _indexChecker = TypeChecker.fromRuntime(Index);
 const TypeChecker _backlinkChecker = TypeChecker.fromRuntime(Backlink);
+const TypeChecker _includeChecker = TypeChecker.fromRuntime(Include);
 
 extension ClassElementX on ClassElement {
   bool get hasZeroArgsConstructor {
@@ -27,14 +28,17 @@ extension ClassElementX on ClassElement {
   List<PropertyInducingElement> get allAccessors {
     final ignoreFields = collectionAnnotation?.ignore ?? embeddedAnnotation!.ignore;
 
+    bool checkCanInclude(PropertyAccessorElement e) {
+      if (!Config.instance.includeOnlyFields) return true;
+      if (_includeChecker.hasAnnotationOf(e.nonSynthetic)) return true;
+      return !e.isGetter && !e.isSetter;
+    }
+
     return [
-      ...accessors.where((e) => Config.instance.includeOnlyFields ? !e.isGetter && !e.isSetter : true).mapNotNull((e) => e.variable),
+      ...accessors.where(checkCanInclude).mapNotNull((e) => e.variable),
       if (collectionAnnotation?.inheritance ?? embeddedAnnotation!.inheritance)
         for (final InterfaceType supertype in allSupertypes) ...[
-          if (!supertype.isDartCoreObject)
-            ...supertype.accessors
-                .where((e) => Config.instance.includeOnlyFields ? !e.isGetter && !e.isSetter : true)
-                .mapNotNull((e) => e.variable),
+          if (!supertype.isDartCoreObject) ...supertype.accessors.where(checkCanInclude).mapNotNull((e) => e.variable),
         ],
     ]
         .where(
