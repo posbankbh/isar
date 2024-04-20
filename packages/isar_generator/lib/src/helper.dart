@@ -31,7 +31,7 @@ extension ClassElementX on ClassElement {
     bool checkCanInclude(PropertyAccessorElement e) {
       if (!Config.instance.includeOnlyFields) return true;
       if (_includeChecker.hasAnnotationOf(e.nonSynthetic)) return true;
-      return e.isGetter && e.isSetter;
+      return !e.isGetter;
     }
 
     return [
