@@ -20,6 +20,7 @@ class Config {
   Config({
     this.classesToIgnore = const [],
     this.skipNotSupportedProperty = true,
+    this.includeOnlyFields = false,
   });
   static Config instance = Config();
 
@@ -30,6 +31,7 @@ class Config {
       if (yaml != null) {
         late final bool skipNotSupportedProperty;
         late final List<String> classesToIgnore;
+        late final bool includeOnlyFields;
 
         final ignoreClasses = yaml['ignore_super_classes'];
         final optionsYaml = yaml['options'];
@@ -42,15 +44,17 @@ class Config {
 
         if (optionsYaml is YamlMap) {
           skipNotSupportedProperty = optionsYaml['skip_not_supported_property'] as bool? ?? true;
+          includeOnlyFields = optionsYaml['include_fields_only'] as bool? ?? true;
         } else {
           skipNotSupportedProperty = true;
+          includeOnlyFields = true;
         }
 
         instance = Config(
           classesToIgnore: classesToIgnore,
           skipNotSupportedProperty: skipNotSupportedProperty,
+          includeOnlyFields: includeOnlyFields,
         );
-
       }
     }
     return instance;
@@ -58,4 +62,5 @@ class Config {
 
   final List<String> classesToIgnore;
   final bool skipNotSupportedProperty;
+  final bool includeOnlyFields;
 }
