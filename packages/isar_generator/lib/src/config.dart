@@ -47,7 +47,7 @@ class Config {
           includeOnlyFields = optionsYaml['include_fields_only'] as bool? ?? true;
         } else {
           skipNotSupportedProperty = true;
-          includeOnlyFields = true;
+          includeOnlyFields = false;
         }
 
         instance = Config(

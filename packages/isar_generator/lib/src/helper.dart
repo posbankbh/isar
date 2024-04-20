@@ -28,26 +28,24 @@ extension ClassElementX on ClassElement {
   List<PropertyInducingElement> get allAccessors {
     final ignoreFields = collectionAnnotation?.ignore ?? embeddedAnnotation!.ignore;
 
-    bool checkCanInclude(PropertyAccessorElement e) {
-      //if (!Config.instance.includeOnlyFields) return true;
-      //if (_includeChecker.hasAnnotationOf(e.nonSynthetic)) return true;
-      return !isSynthetic;
+    bool checkCanInclude(PropertyInducingElement e) {
+      if (!e.isPublic || e.isStatic || _ignoreChecker.hasAnnotationOf(e.nonSynthetic) || ignoreFields.contains(e.name)) return false;
+      if (_includeChecker.hasAnnotationOf(e.nonSynthetic)) return true;
+      if (e.enclosingElement != null && Config.instance.classesToIgnore.contains(e.enclosingElement!.name)) return false;
+      if (Config.instance.includeOnlyFields && e.nonSynthetic is! FieldElement) return false;
+
+      return true;
     }
 
     return [
-      ...accessors.where(checkCanInclude).mapNotNull((e) => e.variable),
+      ...accessors.mapNotNull((e) => e.variable),
       if (collectionAnnotation?.inheritance ?? embeddedAnnotation!.inheritance)
         for (final InterfaceType supertype in allSupertypes) ...[
-          if (!supertype.isDartCoreObject) ...supertype.accessors.where(checkCanInclude).mapNotNull((e) => e.variable),
+          if (!supertype.isDartCoreObject) ...supertype.accessors.mapNotNull((e) => e.variable),
         ],
     ]
         .where(
-          (PropertyInducingElement e) =>
-              e.isPublic &&
-              !e.isStatic &&
-              !_ignoreChecker.hasAnnotationOf(e.nonSynthetic) &&
-              !ignoreFields.contains(e.name) &&
-              !(e.enclosingElement != null && Config.instance.classesToIgnore.contains(e.enclosingElement!.name)),
+          checkCanInclude,
         )
         .distinctBy((e) => e.name)
         .toList();
