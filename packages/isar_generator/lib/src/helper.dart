@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:analyzer/dart/constant/value.dart';
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
@@ -25,41 +27,26 @@ extension ClassElementX on ClassElement {
   List<PropertyInducingElement> get allAccessors {
     final ignoreFields = collectionAnnotation?.ignore ?? embeddedAnnotation!.ignore;
 
-    if (Config.instance.includeOnlyFields) {
-      return [
-        ...fields,
-        if (collectionAnnotation?.inheritance ?? embeddedAnnotation!.inheritance)
-          for (InterfaceType supertype in allSupertypes) ...[if (!supertype.isDartCoreObject) ...supertype.element.fields]
-      ]
-          .where(
-            (PropertyInducingElement e) =>
-                e.isPublic &&
-                !e.isStatic &&
-                !_ignoreChecker.hasAnnotationOf(e.nonSynthetic) &&
-                !ignoreFields.contains(e.name) &&
-                !(e.enclosingElement != null && Config.instance.classesToIgnore.contains(e.enclosingElement!.name)),
-          )
-          .distinctBy((e) => e.name)
-          .toList();
-    } else {
-      return [
-        ...accessors.mapNotNull((e) => e.variable),
-        if (collectionAnnotation?.inheritance ?? embeddedAnnotation!.inheritance)
-          for (InterfaceType supertype in allSupertypes) ...[
-            if (!supertype.isDartCoreObject) ...supertype.accessors.mapNotNull((e) => e.variable)
-          ]
-      ]
-          .where(
-            (PropertyInducingElement e) =>
-                e.isPublic &&
-                !e.isStatic &&
-                !_ignoreChecker.hasAnnotationOf(e.nonSynthetic) &&
-                !ignoreFields.contains(e.name) &&
-                !(e.enclosingElement != null && Config.instance.classesToIgnore.contains(e.enclosingElement!.name)),
-          )
-          .distinctBy((e) => e.name)
-          .toList();
-    }
+    return [
+      ...accessors.where((e) => Config.instance.includeOnlyFields ? !e.isGetter && !e.isSetter : true).mapNotNull((e) => e.variable),
+      if (collectionAnnotation?.inheritance ?? embeddedAnnotation!.inheritance)
+        for (final InterfaceType supertype in allSupertypes) ...[
+          if (!supertype.isDartCoreObject)
+            ...supertype.accessors
+                .where((e) => Config.instance.includeOnlyFields ? !e.isGetter && !e.isSetter : true)
+                .mapNotNull((e) => e.variable),
+        ],
+    ]
+        .where(
+          (PropertyInducingElement e) =>
+              e.isPublic &&
+              !e.isStatic &&
+              !_ignoreChecker.hasAnnotationOf(e.nonSynthetic) &&
+              !ignoreFields.contains(e.name) &&
+              !(e.enclosingElement != null && Config.instance.classesToIgnore.contains(e.enclosingElement!.name)),
+        )
+        .distinctBy((e) => e.name)
+        .toList();
   }
 
   List<String> get enumConsts {
