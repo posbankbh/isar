@@ -31,7 +31,7 @@ extension ClassElementX on ClassElement {
     bool checkCanInclude(PropertyAccessorElement e) {
       if (!Config.instance.includeOnlyFields) return true;
       if (_includeChecker.hasAnnotationOf(e.nonSynthetic)) return true;
-      return !e.isGetter;
+      return true;
     }
 
     return [
@@ -43,6 +43,7 @@ extension ClassElementX on ClassElement {
     ]
         .where(
           (PropertyInducingElement e) =>
+              e.getter == null &&
               e.isPublic &&
               !e.isStatic &&
               !_ignoreChecker.hasAnnotationOf(e.nonSynthetic) &&
