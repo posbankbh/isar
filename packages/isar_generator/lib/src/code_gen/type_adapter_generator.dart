@@ -83,7 +83,7 @@ String generateEstimateSerialize(ObjectInfo object) {
       } else if (property.isMap) {
         value = 'jsonEncode(object.${property.dartName}, toEncodable: (n) => n is Map ? convertMapEnumToString(n) : null)';
       } else if (property.converter != null) {
-        value = '${property.converter!.name}().read(object.${property.dartName})';
+        value = '${property.converter!.name}().write(object.${property.dartName})';
       } else {
         value = 'object.${property.dartName}';
       }
