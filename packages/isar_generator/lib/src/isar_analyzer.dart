@@ -262,17 +262,10 @@ class IsarAnalyzer {
       }
     } else {
       if (dartType.isarType != null) {
-        isarType = dartType.isarType!;
-        if (isarType == IsarType.object || isarType == IsarType.objectList) {
-          //check if we have converter for this object and override the
-          converter = _checkConverters(dartType, property);
-          if (converter != null) {
-            isarType = determineIsarTypeByConverter(converter, dartType) ?? isarType;
-          }
-        }
+        isarType = dartType.isarType;
       } else {
         //check if we have converter for this field type
-        converter = _checkConverters(dartType, modelClass);
+        converter = _checkConverters(dartType, modelClass, property);
         if (converter != null) {
           isarType = determineIsarTypeByConverter(converter, dartType);
         }
@@ -510,8 +503,8 @@ class IsarAnalyzer {
     }
   }
 
-  ConverterMetaData? _checkConverters(DartType fieldDartType, Element convertElement) {
-    final converters = convertElement.isarConverters;
+  ConverterMetaData? _checkConverters(DartType fieldDartType, Element convertElement, PropertyInducingElement property) {
+    final converters = property.isarConverters ?? convertElement.isarConverters;
 
     if (converters != null) {
       for (final converter in converters) {
