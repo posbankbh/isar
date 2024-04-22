@@ -35,3 +35,10 @@ abstract class BoolTypeConverter<T extends Object> implements Converter {
   @override
   T? read(covariant bool? dbValue);
 }
+
+abstract class ObjectTypeConverter<T extends Object> implements Converter {
+  @override
+  String? write(covariant T? obj);
+  @override
+  T? read(covariant String? dbValue);
+}

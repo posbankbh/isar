@@ -16,7 +16,7 @@ const TypeChecker _nameChecker = TypeChecker.fromRuntime(Name);
 const TypeChecker _indexChecker = TypeChecker.fromRuntime(Index);
 const TypeChecker _backlinkChecker = TypeChecker.fromRuntime(Backlink);
 const TypeChecker _includeChecker = TypeChecker.fromRuntime(Include);
-const TypeChecker _converterChecker = TypeChecker.fromRuntime(IsarConverter);
+const TypeChecker _converterChecker = TypeChecker.fromRuntime(IConverter);
 
 extension ClassElementX on ClassElement {
   bool get hasZeroArgsConstructor {

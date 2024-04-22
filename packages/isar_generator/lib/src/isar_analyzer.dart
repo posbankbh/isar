@@ -352,6 +352,8 @@ class IsarAnalyzer {
       return dartType.isDartCoreList ? IsarType.doubleList : IsarType.double;
     } else if (converter.converterType == 'BoolTypeConverter') {
       return dartType.isDartCoreList ? IsarType.boolList : IsarType.bool;
+    } else if (converter.converterType == 'ObjectTypeConverter') {
+      return IsarType.string;
     }
     return null;
   }
