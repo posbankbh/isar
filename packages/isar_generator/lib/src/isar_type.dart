@@ -9,6 +9,7 @@ bool _isDateTime(Element element) => _dateTimeChecker.isExactly(element);
 
 extension DartTypeX on DartType {
   IsarType? get _primitiveIsarType {
+    //read converter
     if (isDartCoreBool) {
       return IsarType.bool;
     } else if (isDartCoreInt) {

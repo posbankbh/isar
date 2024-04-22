@@ -5,9 +5,8 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:dartx/dartx.dart';
 import 'package:isar/isar.dart';
+import 'package:isar_generator/src/config.dart';
 import 'package:source_gen/source_gen.dart';
-
-import 'config.dart';
 
 const TypeChecker _collectionChecker = TypeChecker.fromRuntime(Collection);
 const TypeChecker _enumeratedChecker = TypeChecker.fromRuntime(Enumerated);
@@ -17,6 +16,7 @@ const TypeChecker _nameChecker = TypeChecker.fromRuntime(Name);
 const TypeChecker _indexChecker = TypeChecker.fromRuntime(Index);
 const TypeChecker _backlinkChecker = TypeChecker.fromRuntime(Backlink);
 const TypeChecker _includeChecker = TypeChecker.fromRuntime(Include);
+const TypeChecker _converterChecker = TypeChecker.fromRuntime(IsarConverter);
 
 extension ClassElementX on ClassElement {
   bool get hasZeroArgsConstructor {
@@ -146,8 +146,7 @@ extension ElementX on Element {
   }
 
   List<DartType>? get isarConverters {
-    var ann = _collectionChecker.firstAnnotationOfExact(nonSynthetic);
-    ann ??= _embeddedChecker.firstAnnotationOfExact(nonSynthetic);
+    final ann = _converterChecker.firstAnnotationOfExact(nonSynthetic);
     if (ann == null) {
       return null;
     }

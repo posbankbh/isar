@@ -9,7 +9,6 @@ import 'package:isar/isar.dart';
 import 'package:isar_generator/src/helper.dart';
 import 'package:isar_generator/src/isar_type.dart';
 import 'package:isar_generator/src/object_info.dart';
-import 'package:source_gen/source_gen.dart';
 
 class IsarAnalyzer {
   ObjectInfo analyzeCollection(Element element) {
@@ -186,7 +185,7 @@ class IsarAnalyzer {
     String? defaultEnumElement;
     ConverterMetaData? converter;
 
-    late final IsarType isarType;
+    IsarType? isarType;
     if (scalarDartType.element is EnumElement) {
       final enumeratedAnn = property.enumeratedAnnotation;
       if (enumeratedAnn == null) {
@@ -264,28 +263,27 @@ class IsarAnalyzer {
     } else {
       if (dartType.isarType != null) {
         isarType = dartType.isarType!;
+        if (isarType == IsarType.object || isarType == IsarType.objectList) {
+          //check if we have converter for this object and override the
+          converter = _checkConverters(dartType, property);
+          if (converter != null) {
+            isarType = determineIsarTypeByConverter(converter, dartType) ?? isarType;
+          }
+        }
       } else {
         //check if we have converter for this field type
         converter = _checkConverters(dartType, modelClass);
         if (converter != null) {
-          if (converter.converterType == 'IntTypeConverter') {
-            isarType = dartType.isDartCoreList ? IsarType.longList : IsarType.long;
-          } else if (converter.converterType == 'StringTypeConverter') {
-            isarType = dartType.isDartCoreList ? IsarType.stringList : IsarType.string;
-          } else if (converter.converterType == 'DoubleTypeConverter') {
-            isarType = dartType.isDartCoreList ? IsarType.doubleList : IsarType.double;
-          } else if (converter.converterType == 'BoolTypeConverter') {
-            isarType = dartType.isDartCoreList ? IsarType.boolList : IsarType.bool;
-          } else {
-            throw InvalidGenerationSourceError('Non implemented');
-          }
-        } else {
-          err(
-            'Unsupported type. Please annotate the property with @ignore, Or use [Converters] - Ask Mohammed -.',
-            property,
-          );
+          isarType = determineIsarTypeByConverter(converter, dartType);
         }
       }
+    }
+
+    if (isarType == null) {
+      err(
+        'Unsupported type. Please annotate the property with @ignore, Or use [Converters] - Ask Mohammed -.',
+        property,
+      );
     }
 
     final nullable = dartType.nullabilitySuffix != NullabilitySuffix.none;
@@ -343,6 +341,19 @@ class IsarAnalyzer {
       isDynamic: dartType is DynamicType,
       converter: converter,
     );
+  }
+
+  IsarType? determineIsarTypeByConverter(ConverterMetaData converter, DartType dartType) {
+    if (converter.converterType == 'IntTypeConverter') {
+      return dartType.isDartCoreList ? IsarType.longList : IsarType.long;
+    } else if (converter.converterType == 'StringTypeConverter') {
+      return dartType.isDartCoreList ? IsarType.stringList : IsarType.string;
+    } else if (converter.converterType == 'DoubleTypeConverter') {
+      return dartType.isDartCoreList ? IsarType.doubleList : IsarType.double;
+    } else if (converter.converterType == 'BoolTypeConverter') {
+      return dartType.isDartCoreList ? IsarType.boolList : IsarType.bool;
+    }
+    return null;
   }
 
   ObjectLink analyzeObjectLink(PropertyInducingElement property) {
@@ -497,8 +508,8 @@ class IsarAnalyzer {
     }
   }
 
-  ConverterMetaData? _checkConverters(DartType fieldDartType, ClassElement classElement) {
-    final converters = classElement.isarConverters;
+  ConverterMetaData? _checkConverters(DartType fieldDartType, Element convertElement) {
+    final converters = convertElement.isarConverters;
 
     if (converters != null) {
       for (final converter in converters) {

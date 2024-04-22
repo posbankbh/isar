@@ -71,12 +71,22 @@ String generateEstimateSerialize(ObjectInfo object) {
 
   for (final property in object.properties) {
     var value = '';
-    if (property.isDynamic) {
-      value = 'jsonEncode(object.${property.dartName})';
-    } else if (property.isMap) {
-      value = 'jsonEncode(object.${property.dartName}, toEncodable: (n) => n is Map ? convertMapEnumToString(n) : null)';
-    } else {
-      value = 'object.${property.dartName}';
+
+    if (property.isarType != IsarType.int && //No need to calculate the size for these well-known types
+        property.isarType != IsarType.dateTime &&
+        property.isarType != IsarType.long &&
+        property.isarType != IsarType.bool &&
+        property.isarType != IsarType.float &&
+        property.isarType != IsarType.double) {
+      if (property.isDynamic) {
+        value = 'jsonEncode(object.${property.dartName})';
+      } else if (property.isMap) {
+        value = 'jsonEncode(object.${property.dartName}, toEncodable: (n) => n is Map ? convertMapEnumToString(n) : null)';
+      } else if (property.converter != null) {
+        value = '${property.converter!.name}().read(object.${property.dartName})';
+      } else {
+        value = 'object.${property.dartName}';
+      }
     }
 
     switch (property.isarType) {

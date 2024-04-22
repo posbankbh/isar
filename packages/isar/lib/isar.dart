@@ -3,7 +3,6 @@ library isar;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:isar/src/isar_connect_api.dart';
@@ -23,6 +22,7 @@ part 'src/annotations/collection.dart';
 part 'src/annotations/embedded.dart';
 part 'src/annotations/enumerated.dart';
 part 'src/annotations/ignore.dart';
+part 'src/annotations/converter.dart';
 part 'src/annotations/index.dart';
 part 'src/annotations/name.dart';
 part 'src/annotations/type.dart';
