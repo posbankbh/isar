@@ -6,8 +6,7 @@ import 'package:isar/src/common/isar_link_base_impl.dart';
 const bool _kIsWeb = identical(0, 0.0);
 
 /// @nodoc
-abstract class IsarLinksCommon<OBJ> extends IsarLinkBaseImpl<OBJ>
-    with IsarLinks<OBJ>, SetMixin<OBJ> {
+abstract class IsarLinksCommon<OBJ> extends IsarLinkBaseImpl<OBJ> with IsarLinks<OBJ>, SetMixin<OBJ> {
   final _objects = <Id, OBJ>{};
 
   /// @nodoc
@@ -145,6 +144,18 @@ abstract class IsarLinksCommon<OBJ> extends IsarLinkBaseImpl<OBJ>
   }
 
   @override
+  bool addAll(Iterable<OBJ> elements) {
+    removedObjects.removeAll(elements);
+    addedObjects.addAll(elements);
+
+    for (final value in elements) {
+      _objects[Isar.autoIncrement] = value;
+    }
+
+    return true;
+  }
+
+  @override
   bool contains(Object? element) {
     requireAttached();
 
@@ -216,8 +227,7 @@ abstract class IsarLinksCommon<OBJ> extends IsarLinkBaseImpl<OBJ>
 
   @override
   String toString() {
-    final content =
-        IterableBase.iterableToFullString(_objects.values, '{', '}');
+    final content = IterableBase.iterableToFullString(_objects.values, '{', '}');
     return 'IsarLinks($content)';
   }
 }
