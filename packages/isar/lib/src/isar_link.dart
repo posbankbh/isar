@@ -72,6 +72,12 @@ abstract class IsarLinks<OBJ> implements IsarLinkBase<OBJ>, Set<OBJ> {
   /// generic argument.
   factory IsarLinks() => IsarLinksImpl();
 
+  /// @nodoc
+  final addedObjects = HashSet<OBJ>.identity();
+
+  /// @nodoc
+  final removedObjects = HashSet<OBJ>.identity();
+
   @override
   Future<void> load({bool overrideChanges = true});
 

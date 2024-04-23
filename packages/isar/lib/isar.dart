@@ -1,6 +1,7 @@
 library isar;
 
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';

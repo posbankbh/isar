@@ -9,12 +9,6 @@ const bool _kIsWeb = identical(0, 0.0);
 abstract class IsarLinksCommon<OBJ> extends IsarLinkBaseImpl<OBJ> with IsarLinks<OBJ>, SetMixin<OBJ> {
   final _objects = <Id, OBJ>{};
 
-  /// @nodoc
-  final addedObjects = HashSet<OBJ>.identity();
-
-  /// @nodoc
-  final removedObjects = HashSet<OBJ>.identity();
-
   @override
   bool isLoaded = false;
 
