@@ -161,7 +161,7 @@ abstract class IsarLinksCommon<OBJ> extends IsarLinkBaseImpl<OBJ> with IsarLinks
     addedObjects.addAll(elements);
 
     for (final value in elements) {
-      _objects[Isar.autoIncrement] = value;
+      _objects[(value as dynamic).isarId as Id] = value;
     }
 
     return true;
