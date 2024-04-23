@@ -159,11 +159,6 @@ abstract class IsarLinksCommon<OBJ> extends IsarLinkBaseImpl<OBJ> with IsarLinks
 
     removedObjects.removeAll(elements);
     addedObjects.addAll(elements);
-
-    for (final value in elements) {
-      _objects[(value as dynamic).isarId as Id] = value;
-    }
-
     return true;
   }
 
@@ -181,10 +176,10 @@ abstract class IsarLinksCommon<OBJ> extends IsarLinkBaseImpl<OBJ> with IsarLinks
   }
 
   @override
-  Iterator<OBJ> get iterator => _loadedObjects.values.iterator;
+  Iterator<OBJ> get iterator => _loadedObjects.values.followedBy(addedObjects).iterator;
 
   @override
-  int get length => _loadedObjects.length;
+  int get length => _loadedObjects.values.followedBy(addedObjects).length;
 
   @override
   OBJ? lookup(Object? element) {
