@@ -145,6 +145,18 @@ abstract class IsarLinksCommon<OBJ> extends IsarLinkBaseImpl<OBJ> with IsarLinks
 
   @override
   bool addAll(Iterable<OBJ> elements) {
+    if (isAttached) {
+      for (final value in elements) {
+        final id = getId(value);
+        if (id != Isar.autoIncrement) {
+          if (_objects.containsKey(id)) {
+            return false;
+          }
+          _objects[id] = value;
+        }
+      }
+    }
+
     removedObjects.removeAll(elements);
     addedObjects.addAll(elements);
 
