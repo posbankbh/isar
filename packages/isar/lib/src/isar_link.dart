@@ -12,6 +12,12 @@ abstract class IsarLinkBase<OBJ> {
   /// Has this link been loaded?
   bool get isLoaded;
 
+  /// @nodoc
+  HashSet<OBJ> get addedObjects;
+
+  /// @nodoc
+  HashSet<OBJ> get removedObjects;
+
   /// {@template link_load}
   /// Loads the linked object(s) from the database
   /// {@endtemplate}
@@ -71,12 +77,6 @@ abstract class IsarLinks<OBJ> implements IsarLinkBase<OBJ>, Set<OBJ> {
   /// Create an empty, unattached link. Make sure to provide the correct
   /// generic argument.
   factory IsarLinks() => IsarLinksImpl();
-
-  /// @nodoc
-  final addedObjects = HashSet<OBJ>.identity();
-
-  /// @nodoc
-  final removedObjects = HashSet<OBJ>.identity();
 
   @override
   Future<void> load({bool overrideChanges = true});

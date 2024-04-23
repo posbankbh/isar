@@ -10,6 +10,15 @@ abstract class IsarLinksCommon<OBJ> extends IsarLinkBaseImpl<OBJ> with IsarLinks
   final _objects = <Id, OBJ>{};
 
   @override
+
+  /// @nodoc
+  final HashSet<OBJ> addedObjects = HashSet<OBJ>.identity();
+
+  /// @nodoc
+  @override
+  final HashSet<OBJ> removedObjects = HashSet<OBJ>.identity();
+
+  @override
   bool isLoaded = false;
 
   @override
