@@ -11,10 +11,12 @@ abstract class IsarLinkBaseImpl<OBJ> implements IsarLinkBase<OBJ> {
 
   /// The origin collection of the link. For backlinks it is actually the target
   /// collection.
+  @override
   late final IsarCollection<dynamic> sourceCollection;
 
   /// The target collection of the link. For backlinks it is actually the origin
   /// collection.
+  @override
   late final IsarCollection<OBJ> targetCollection;
 
   @override

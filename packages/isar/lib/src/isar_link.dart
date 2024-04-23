@@ -18,6 +18,14 @@ abstract class IsarLinkBase<OBJ> {
   /// @nodoc
   HashSet<OBJ> get removedObjects;
 
+  /// The origin collection of the link. For backlinks it is actually the target
+  /// collection.
+  IsarCollection<dynamic> get sourceCollection;
+
+  /// The target collection of the link. For backlinks it is actually the origin
+  /// collection.
+  IsarCollection<dynamic> get targetCollection;
+
   /// {@template link_load}
   /// Loads the linked object(s) from the database
   /// {@endtemplate}
