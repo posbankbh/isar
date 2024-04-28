@@ -34,7 +34,7 @@ abstract class IsarCommon extends Isar {
     Future<T> Function() callback,
   ) async {
     requireOpen();
-    if (!write) {
+    if (write) {
       _requireNotInTxn();
     }
 
