@@ -116,7 +116,9 @@ abstract class IsarCommon extends Isar {
 
   T _beginTxnSync<T>(bool write, bool silent, T Function() callback) {
     requireOpen();
-    _requireNotInTxn();
+    if (write) {
+      _requireNotInTxn();
+    }
 
     if (write && _asyncWriteTxnsActive > 0) {
       throw IsarError(
