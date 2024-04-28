@@ -81,8 +81,7 @@ class QueryImpl<T> extends Query<T> implements Finalizable {
   }
 
   @override
-  Future<bool> deleteFirst() =>
-      deleteInternal(1).then((int count) => count == 1);
+  Future<bool> deleteFirst() => deleteInternal(1).then((int count) => count == 1);
 
   @override
   Future<int> deleteAll() => deleteInternal(maxLimit);
@@ -112,8 +111,7 @@ class QueryImpl<T> extends Query<T> implements Finalizable {
 
   @override
   Stream<List<T>> watch({bool fireImmediately = false}) {
-    return watchLazy(fireImmediately: fireImmediately)
-        .asyncMap((event) => findAll());
+    return watchLazy(fireImmediately: fireImmediately).asyncMap((event) => findAll());
   }
 
   @override
@@ -246,8 +244,7 @@ class QueryImpl<T> extends Query<T> implements Finalizable {
       if (R == int) {
         return value as R;
       } else {
-        return DateTime.fromMicrosecondsSinceEpoch(value, isUtc: true).toLocal()
-            as R;
+        return DateTime.fromMicrosecondsSinceEpoch(value, isUtc: true).toLocal() as R;
       }
     } else {
       final value = IC.isar_q_aggregate_double_result(resultPtr);

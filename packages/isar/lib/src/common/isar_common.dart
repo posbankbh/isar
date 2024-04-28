@@ -34,7 +34,9 @@ abstract class IsarCommon extends Isar {
     Future<T> Function() callback,
   ) async {
     requireOpen();
-    _requireNotInTxn();
+    if (!write) {
+      _requireNotInTxn();
+    }
 
     final completer = Completer<void>();
     _activeAsyncTxns.add(completer.future);
