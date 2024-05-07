@@ -422,8 +422,8 @@ String _deserialize(ObjectProperty property, String propertyOffset) {
       return 'reader.readDateTime$orNull($propertyOffset)';
     case IsarType.string:
       if (property.isMap) {
-        final keyTypeName = property.mapKeyType!.getDisplayString(withNullability: false);
-        final valueTypeName = property.mapValueType!.getDisplayString(withNullability: false);
+        final keyTypeName = property.mapKeyType!.getDisplayString(withNullability: true);
+        final valueTypeName = property.mapValueType!.getDisplayString(withNullability: true);
         final isKeyEnum = property.mapKeyType!.element is EnumElement;
         final isValueEnum = property.mapValueType!.element is EnumElement;
         final converterCode = isKeyEnum || isValueEnum
