@@ -33,3 +33,5 @@ Map<dynamic, dynamic> convertMapEnumToString(Map<dynamic, dynamic> originalMap) 
     return MapEntry(key is Enum ? key.name : key, value is Enum ? value.name : value);
   });
 }
+
+String nullToEmptyString(String? id) => id ?? '';
