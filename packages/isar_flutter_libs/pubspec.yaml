@@ -16,7 +16,7 @@ dependencies:
     git:
       url: https://github.com/posbankbh/isar.git
       path: 'packages/isar'
-      ref: posbank-3.1.2
+      ref: posbank-4.0.0
 
 flutter:
   plugin:

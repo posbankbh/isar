@@ -1,0 +1,17 @@
+{
+  global:
+    Java_io_isar_isar_Isar_nClose;
+    Java_io_isar_isar_Isar_nCopy;
+    Java_io_isar_isar_Isar_nCreateInstance;
+    Java_io_isar_isar_Isar_nCreateRawInstance;
+    Java_io_isar_isar_Isar_nGetInstance;
+    Java_io_isar_isar_Isar_nGetVersion;
+    Java_io_isar_isar_Isar_nInit;
+    Java_io_isar_isar_Isar_nRead;
+    Java_io_isar_isar_Isar_nSize;
+    Java_io_isar_isar_Isar_nWrite;
+    JNI_OnLoad;
+
+  local:
+    *;
+};

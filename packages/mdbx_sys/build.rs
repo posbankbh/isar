@@ -116,7 +116,7 @@ fn main() {
 
     bindings
         .write_to_file(out_path.join("bindings.rs"))
-        .expect("Couldn't write bindings!");
+        .expect("Couldn\'t write bindings!");
 
     let mut cc_builder = cc::Build::new();
     let flags = format!("{:?}", cc_builder.get_compiler().cflags_env());
@@ -135,7 +135,6 @@ fn main() {
             .define("UNICODE", "1")
             .define("HAVE_LIBM", "1")
             .define("NDEBUG", "1")
-            .cflag("/w")
             .init_c_cfg(cc_builder)
             .build();
 
