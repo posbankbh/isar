@@ -12,7 +12,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  isar: any
+  isar:
+    git:
+        url: https://github.com/posbankbh/isar.git
+        path: "packages/isar"
+        ref: posbank-v4.2
 
 flutter:
   plugin:

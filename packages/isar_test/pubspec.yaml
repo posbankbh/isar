@@ -13,8 +13,16 @@ dependencies:
   integration_test:
     sdk: flutter
   intl: 0.18.0
-  isar: any
-  isar_flutter_libs: any
+  isar: 
+    git:
+      url: https://github.com/posbankbh/isar.git
+      path: "packages/isar"
+      ref: posbank-v4.2
+  isar_flutter_libs:
+    git:
+      url: https://github.com/posbankbh/isar.git
+      path: "packages/isar_flutter_libs"
+      ref: posbank-v4.2
   json_annotation: ^4.7.0
   meta: ^1.8.0
   path: ^1.8.2
