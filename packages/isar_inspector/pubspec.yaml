@@ -19,7 +19,7 @@ dependencies:
     git:
       url: https://github.com/posbankbh/isar.git
       path: "packages/isar"
-      ref: posbank-v4.2
+      ref: test
   vm_service: ^9.0.0
   web_socket_channel: ^2.2.0
 
